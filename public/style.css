@@ -1,0 +1,103 @@
+@import "qrcode.vue";
+@page{margin:0 ; size: portrait; }
+
+#print, #printCert{
+  width: 100vw;
+  height: 100vh;
+}
+#printDiv {
+    /* width: 100%;
+    height: 1020px;
+    margin-top: -100px;
+    margin-left: 16px; */
+    font-family: "Arial", Times, serif;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-position: center left !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    overflow: visible;
+    position: relative;
+  }
+  
+  #assessmentNumber {
+    /* margin-top: -65px;
+    margin-left: -590px;
+    font-size: 18px !important; */
+    font-weight: bold !important;
+  }
+  
+  #printInfo {
+    /* margin-top: -170px;
+    margin-left: 65px;
+    font-size: 14px; */
+    width:920px;
+    text-align: left;
+    padding: 0px;
+  }
+  
+  #printInfoFirstDose,
+  #printInfoSecondDose {
+    /* margin-left: 115px; */
+    text-align: center;
+    /* font-size: 15px; */
+    padding: 0px;
+  }
+  
+  /* #printInfoFirstDose {
+    margin-top: -45px;
+  }
+  
+  #printInfoSecondDose {
+    margin-top: 25px;
+  } */
+  
+  /* Consent form */
+  #printConsentAstra,
+  #printConsentSinovac {
+    background-color: red;
+    width: 96%;
+    height: 1400px;
+    margin-top: -110px;
+    margin-left: 16px;
+    margin-bottom: 50px;
+    font-family: "Arial", Times, serif;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-position: center left !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    overflow: visible;
+  }
+  
+  #printConsentAstraInfo,
+  #printConsentSinovacInfo {
+    margin-top: 220px;
+    margin-left: 10px;
+    text-align: left;
+    font-size: 13px;
+    padding: 0px;
+  }
+  
+  .pdetails{
+    width: 110px;
+    font-weight:bold;
+  }
+  
+  .pdetailsCert{
+    width: 75px;
+    font-weight:bold;
+  }
+
+  img{
+    margin-top: 180px;
+    margin-left: 750px;
+    height: 120px;
+    width: 120px;
+  }
