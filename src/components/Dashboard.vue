@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <v-app-bar color="primary" app dark elevate-on-scroll>
       <v-img
-        src="/images/GOCABVaX.png"
+        src="https://cvimsmicrosite.s3.ap-southeast-1.amazonaws.com/images/GOCABVax.png"
         alt="John"
         max-height="55"
         max-width="55"
