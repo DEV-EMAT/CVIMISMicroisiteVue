@@ -931,7 +931,7 @@ export default {
               ", " +
               item.vaccination_monitoring[1].first_name +
               " " +
-              item.vaccination_monitoring[1].middle_name[1] +
+              item.vaccination_monitoring[1].middle_name[0] +
               `.</td></tr>`;
           }
         }
