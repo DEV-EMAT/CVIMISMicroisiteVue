@@ -678,7 +678,7 @@ export default {
         item.pre_registration.barangay +
         `</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
 
-      if (item.vaccination_monitoring) {
+      if (item.vaccination_monitoring.length) {
         if (item.vaccination_monitoring[0].dosage == "1") {
           if (
             item.vaccination_monitoring[0].vaccine_manufacturer ==
@@ -853,7 +853,7 @@ export default {
         item.pre_registration.barangay +
         `</td></tr>`;
 
-      if (item.vaccination_monitoring) {
+      if (item.vaccination_monitoring.length) {
         if (item.vaccination_monitoring[0].dosage == "1") {
           if (
             item.vaccination_monitoring[0].vaccine_manufacturer ==
