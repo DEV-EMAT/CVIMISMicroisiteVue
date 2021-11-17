@@ -518,6 +518,7 @@ export default {
     printInfoFirstDoseFontSize: null,
     printInfoSecondDoseMargin: null,
     printInfoSecondDoseFontSize: null,
+    vaccine: null,
   }),
 
   computed: {
@@ -607,27 +608,35 @@ export default {
       
       if(item.vaccination_monitoring){
         if(item.vaccination_monitoring[0].dosage == "1"){
+          if(item.vaccination_monitoring[0].vaccine_manufacturer == "JOHNSON AND JOHNSON"){
+            this.vaccine = "J&J";
+          }else{
+            this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
+          }
           this.vaccinationDate = new Date(item.vaccination_monitoring[0].vaccination_date);
           this.printInfoFirstDose = `<tr><td style="width:150px">` + (this.vaccinationDate.getMonth() + 1) + "&emsp;&emsp;&nbsp;&nbsp;" + this.vaccinationDate.getDate() + "&emsp;&emsp;&nbsp;" + this.vaccinationDate.getFullYear().toString().substr(2,2) + `</td><td style="width:50px"></td>
-                                        <td style="width:85px">` + item.vaccination_monitoring[0].vaccine_manufacturer + `</td><td style="width:90px"></td>
+                                        <td style="width:85px">` + this.vaccine + `</td><td style="width:90px"></td>
                                         <td style="width:100px">` + item.vaccination_monitoring[0].batch_number + `</td><td style="width:85px"></td>
                                         <td style="width:100px">` + item.vaccination_monitoring[0].lot_number + `</td>
                                       </tr>
                                       <tr><td style='height:34px'><br></td></tr>
                                       <tr><td style="text-align:left" colspan="3">&nbsp` + item.vaccination_monitoring[0].last_name + ', ' + item.vaccination_monitoring[0].first_name + ' ' + item.vaccination_monitoring[0].middle_name[0] + `.</td></tr>`;
-                                       /////////////////////////////////////EDITED
         }
         if(item.vaccination_monitoring[1]){
           if(item.vaccination_monitoring[1].dosage == "2"){
+            if(item.vaccination_monitoring[1].vaccine_manufacturer == "JOHNSON AND JOHNSON"){
+            this.vaccine = "J&J";
+            }else{
+              this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
+            }
             this.vaccinationDate = new Date(item.vaccination_monitoring[1].vaccination_date);
             this.printInfoSecondDose = `<tr><td style="width:150px">` + (this.vaccinationDate.getMonth() + 1) + "&emsp;&emsp;&nbsp;&nbsp;" + this.vaccinationDate.getDate() + "&emsp;&emsp;&nbsp;" + this.vaccinationDate.getFullYear().toString().substr(2,2) + `</td><td style="width:50px"></td>
-                                          <td style="width:85px">` + item.vaccination_monitoring[1].vaccine_manufacturer + `</td><td style="width:90px"></td>
+                                          <td style="width:85px">` + this.vaccine + `</td><td style="width:90px"></td>
                                           <td style="width:100px">` + item.vaccination_monitoring[1].batch_number + `</td><td style="width:85px"></td>
                                           <td style="width:100px">` + item.vaccination_monitoring[1].lot_number + `</td>
                                         </tr>
                                         <tr><td style='height:34px'><br></td></tr>
-                                        <tr><td style="text-align:left" colspan="3">&nbsp` + item.vaccination_monitoring[1].last_name + ', ' + item.vaccination_monitoring[1].first_name + ' ' + item.vaccination_monitoring[1].middle_name[1] + `.</td></tr>`;
-                                        /////////////////////////////////////EDITED
+                                        <tr><td style="text-align:left" colspan="3">&nbsp` + item.vaccination_monitoring[1].last_name + ', ' + item.vaccination_monitoring[1].first_name + ' ' + item.vaccination_monitoring[1].middle_name[1] + `.</td></tr>`;                     
           }
         }
       }
@@ -690,27 +699,35 @@ export default {
                           
       if(item.vaccination_monitoring){
         if(item.vaccination_monitoring[0].dosage == "1"){
+          if(item.vaccination_monitoring[0].vaccine_manufacturer == "JOHNSON AND JOHNSON"){
+            this.vaccine = "J&J";
+          }else{
+            this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
+          }
           this.vaccinationDate = new Date(item.vaccination_monitoring[0].vaccination_date);
           this.printInfoFirstDose = `<tr><td style="width:90px">` + (this.vaccinationDate.getMonth() + 1) + "&emsp;&nbsp;&nbsp;" + this.vaccinationDate.getDate() + "&emsp;&emsp;&nbsp;" + this.vaccinationDate.getFullYear().toString().substr(2,2) + `</td><td style="width:10px"></td>
-                                        <td style="width:60px">` + item.vaccination_monitoring[0].vaccine_manufacturer + `</td><td style="width:30px"></td>
+                                        <td style="width:60px">` + this.vaccine + `</td><td style="width:30px"></td>
                                         <td style="width:60px">` + item.vaccination_monitoring[0].batch_number + `</td><td style="width:30px"></td>
                                         <td style="width:60px">` + item.vaccination_monitoring[0].lot_number + `</td>
                                       </tr>
                                       <tr><td style='height:15px'><br></td></tr>
                                       <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` + item.vaccination_monitoring[0].last_name + ', ' + item.vaccination_monitoring[0].first_name + ' ' + item.vaccination_monitoring[0].middle_name[0] + `.</td></tr>`;
-                                       /////////////////////////////////////EDITED`;
         }
         if(item.vaccination_monitoring[1]){
           if(item.vaccination_monitoring[1].dosage == "2"){
+            if(item.vaccination_monitoring[1].vaccine_manufacturer == "JOHNSON AND JOHNSON"){
+              this.vaccine = "J&J";
+            }else{
+              this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
+            }
             this.vaccinationDate = new Date(item.vaccination_monitoring[1].vaccination_date);
             this.printInfoSecondDose = `<tr><td style="width:90px">` + (this.vaccinationDate.getMonth() + 1) + "&emsp;&nbsp;&nbsp;" + this.vaccinationDate.getDate() + "&emsp;&emsp;&nbsp;" + this.vaccinationDate.getFullYear().toString().substr(2,2) + `</td><td style="width:10px"></td>
-                                          <td style="width:60px">` + item.vaccination_monitoring[1].vaccine_manufacturer + `</td><td style="width:30px"></td>
+                                          <td style="width:60px">` + this.vaccine + `</td><td style="width:30px"></td>
                                           <td style="width:60px">` + item.vaccination_monitoring[1].batch_number + `</td><td style="width:30px"></td>
                                           <td style="width:60px">` + item.vaccination_monitoring[1].lot_number + `</td>
                                         </tr>
                                         <tr><td style='height:15px'><br></td></tr>
                                         <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` + item.vaccination_monitoring[1].last_name + ', ' + item.vaccination_monitoring[1].first_name + ' ' + item.vaccination_monitoring[1].middle_name[1] + `.</td></tr>`;
-                                         /////////////////////////////////////EDITED`;
           }
         }
       }
