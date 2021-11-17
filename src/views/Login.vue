@@ -132,7 +132,7 @@
                     ref="password"
                     v-model="password"
                     :append-icon="isPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                    :rules="[rules.required, rules.min]"
+                    :rules="[rules.required]"
                     :error-messages="errorMessagePassword"
                     :type="isPassword ? 'text' : 'password'"
                     name="input-10-1"
@@ -192,7 +192,7 @@ export default {
       ],
       rules: {
         required: (value) => !!value || "Required.",
-        min: (v) => (v && v.length >= 8) || "Min 6 characters",
+        // min: (v) => (v && v.length >= 8) || "Min 6 characters",
       },
       isLoading: false,
     };
