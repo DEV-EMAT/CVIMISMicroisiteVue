@@ -279,34 +279,73 @@
           max-width="700"
         >
           <div id="print">
-            <v-card id="printDiv" :style="{ height:printDivHeight, width:printDivWidth, margin:printDivMargin}">
+            <v-card
+              id="printDiv"
+              :style="{
+                height: printDivHeight,
+                width: printDivWidth,
+                margin: printDivMargin,
+              }"
+            >
               <div id="printQrCode">
-                <img :src="img" style="margin-bottom: 6px;" :style="{ height:qrcodeHeight, width:qrcodeWidth, margin:qrcodeMargin}"/><qrcode-vue
+                <img
+                  :src="img"
+                  style="margin-bottom: 6px"
+                  :style="{
+                    height: qrcodeHeight,
+                    width: qrcodeWidth,
+                    margin: qrcodeMargin,
+                  }"
+                /><qrcode-vue
                   :value="value"
                   :size="size"
                   level="H"
                   id="qrCode"
                 />
               </div>
-              <div id="assessmentNumber" v-html="assessmentNumber" :style="{ margin:assessmentMargin, fontSize: assessmentFontSize}"></div>
-              <div id="printContainer" style="height: 200px; width: 200px">
-               
-              </div>
+              <div
+                id="assessmentNumber"
+                v-html="assessmentNumber"
+                :style="{
+                  margin: assessmentMargin,
+                  fontSize: assessmentFontSize,
+                }"
+              ></div>
+              <div
+                id="printContainer"
+                style="height: 200px; width: 200px"
+              ></div>
 
               <div class="row">
-                <table id="printInfo" v-html="printInfo" :style="{ margin:printInfoMargin, fontSize: printInfoFontSize, width: printInfoWidth}">
-                 
-                </table>
+                <table
+                  id="printInfo"
+                  v-html="printInfo"
+                  :style="{
+                    margin: printInfoMargin,
+                    fontSize: printInfoFontSize,
+                    width: printInfoWidth,
+                  }"
+                ></table>
               </div>
               <div class="row">
-                <table id="printInfoFirstDose" v-html="printInfoFirstDose" :style="{ margin:printInfoFirstDoseMargin, fontSize: printInfoFirstDoseFontSize}">
-                 
-                </table>
+                <table
+                  id="printInfoFirstDose"
+                  v-html="printInfoFirstDose"
+                  :style="{
+                    margin: printInfoFirstDoseMargin,
+                    fontSize: printInfoFirstDoseFontSize,
+                  }"
+                ></table>
               </div>
               <div class="row">
-                <table id="printInfoSecondDose" v-html="printInfoSecondDose" :style="{ margin:printInfoSecondDoseMargin, fontSize: printInfoSecondDoseFontSize}">
-                  
-                </table>
+                <table
+                  id="printInfoSecondDose"
+                  v-html="printInfoSecondDose"
+                  :style="{
+                    margin: printInfoSecondDoseMargin,
+                    fontSize: printInfoSecondDoseFontSize,
+                  }"
+                ></table>
               </div>
             </v-card>
           </div>
@@ -324,7 +363,7 @@
             >
           </v-card-actions>
         </v-dialog>
-                <v-dialog
+        <v-dialog
           v-model="printDialogCert"
           transition="dialog-bottom-transition"
           max-width="700"
@@ -332,32 +371,37 @@
           <div id="print">
             <v-card id="printDiv">
               <div id="printQrCode">
-                <img :src="img" style="margin-bottom: 6px;"/><qrcode-vue
+                <img :src="img" style="margin-bottom: 6px" /><qrcode-vue
                   :value="value"
                   :size="size"
                   level="H"
                   id="qrCode"
                 />
               </div>
-              <div id="assessmentNumber" v-html="assessmentNumber" style="font-size: 12px;"></div>
-              <div id="printContainer" style="height: 200px; width: 200px">
-               
-              </div>
+              <div
+                id="assessmentNumber"
+                v-html="assessmentNumber"
+                style="font-size: 12px"
+              ></div>
+              <div
+                id="printContainer"
+                style="height: 200px; width: 200px"
+              ></div>
 
               <div class="row">
-                <table id="printInfo" v-html="printInfo">
-                 
-                </table>
+                <table id="printInfo" v-html="printInfo"></table>
               </div>
               <div class="row">
-                <table id="printInfoFirstDose" v-html="printInfoFirstDose">
-                 
-                </table>
+                <table
+                  id="printInfoFirstDose"
+                  v-html="printInfoFirstDose"
+                ></table>
               </div>
               <div class="row">
-                <table id="printInfoSecondDose" v-html="printInfoSecondDose">
-                  
-                </table>
+                <table
+                  id="printInfoSecondDose"
+                  v-html="printInfoSecondDose"
+                ></table>
               </div>
             </v-card>
           </div>
@@ -402,7 +446,7 @@
         <v-icon left> mdi-printer </v-icon>
         Print Certificate
       </v-btn>
-      <v-btn
+      <!-- <v-btn
         small
         depressed
         color="blue"
@@ -412,7 +456,7 @@
       >
         <v-icon left> mdi-printer </v-icon>
         Print Consent Form
-      </v-btn>
+      </v-btn> -->
       <v-btn
         small
         depressed
@@ -430,7 +474,7 @@
 
 <script>
 import QrcodeVue from "qrcode.vue";
-import { GET_QUALIFIED_PATIENT } from "../store/transaction";
+import { GET_QUALIFIED_PATIENT, GET_CATEGORIES } from "../store/transaction";
 
 export default {
   components: {
@@ -567,10 +611,18 @@ export default {
     // },
     showDialog(item) {
       console.log(item);
+      this.printDialog = true;
+      setTimeout(
+        function () {
+          this.printDialog = false;
+        }.bind(this),
+        0
+      );
+
       this.printDivHeight = "1020px";
       this.printDivWidth = "100%";
       this.printDivMargin = "-100px 0px 0px 16px";
-      
+
       this.qrcodeHeight = "140px";
       this.qrcodeWidth = "140px";
       this.qrcodeMargin = "150px 0px 0px 700px";
@@ -583,82 +635,166 @@ export default {
       this.printInfoFirstDoseFontSize = "15px";
       this.printInfoSecondDoseMargin = "10px 0px 0px 140px";
       this.printInfoSecondDoseFontSize = "15px";
-      
-      this.sex = (item.pre_registration.sex == "01_MALE") ? "Male" : "Female";
+
+      this.sex = item.pre_registration.sex == "01_MALE" ? "Male" : "Female";
       // this.date_of_birth = new Date(item.pre_registration.date_of_birth);
       this.today = new Date();
       this.birthDate = new Date(item.pre_registration.date_of_birth);
       this.age = this.today.getFullYear() - this.birthDate.getFullYear();
       this.temp = this.today.getMonth() - this.birthDate.getMonth();
-      if (this.temp < 0 || (this.temp === 0 && this.today.getDate() < this.birthDate.getDate())) {
-          this.age--;
+      if (
+        this.temp < 0 ||
+        (this.temp === 0 && this.today.getDate() < this.birthDate.getDate())
+      ) {
+        this.age--;
       }
 
       this.printDialog = true;
       this.assessmentNumber = item.qrcode;
       this.value = item.qrcode;
-      this.printInfo = `<tr><td class="pdetails">Fullname:</td><td colspan="4">` + item.pre_registration.patient_name + `</td></tr>
-                        <tr><td class="pdetails">Address:</td><td colspan="4">` + item.pre_registration.home_address + `</td></tr>
-                        <tr><td class="pdetails">Mobile Number:</td><td>` + item.pre_registration.contact_number + `</td><td width="2px"></td>
-                          <td class="pdetails">Age:</td><td>` + this.age + ` years old</td><td width="2px"></td>
-                          <td class="pdetails">Sex:</td><td>` + this.sex + `</td></tr>
-                        <tr><td class="pdetails">PhilHealth Number:</td><td>` + item.pre_registration.philhealth_number + `</td><td width="2px"></td>
-                          <td class="pdetails">Category:</td><td>` + item.pre_registration.category_name + `</td><td width="2px"></td>
-                          <td class="pdetails">Barangay:</td><td>` + item.pre_registration.barangay + `</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
-      
-      if(item.vaccination_monitoring){
-        if(item.vaccination_monitoring[0].dosage == "1"){
-          if(item.vaccination_monitoring[0].vaccine_manufacturer == "JOHNSON AND JOHNSON"){
+      this.printInfo =
+        `<tr><td class="pdetails">Fullname:</td><td colspan="4">` +
+        item.pre_registration.patient_name +
+        `</td></tr>
+                        <tr><td class="pdetails">Address:</td><td colspan="4">` +
+        item.pre_registration.home_address +
+        `</td></tr>
+                        <tr><td class="pdetails">Mobile Number:</td><td>` +
+        item.pre_registration.contact_number +
+        `</td><td width="2px"></td>
+                          <td class="pdetails">Age:</td><td>` +
+        this.age +
+        ` years old</td><td width="2px"></td>
+                          <td class="pdetails">Sex:</td><td>` +
+        this.sex +
+        `</td></tr>
+                        <tr><td class="pdetails">PhilHealth Number:</td><td>` +
+        item.pre_registration.philhealth_number +
+        `</td><td width="2px"></td>
+                          <td class="pdetails">Category:</td><td>` +
+        this.getCategoryName(item.pre_registration.category_id) +
+        `</td><td width="2px"></td>
+                          <td class="pdetails">Barangay:</td><td>` +
+        item.pre_registration.barangay +
+        `</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+
+      if (item.vaccination_monitoring) {
+        if (item.vaccination_monitoring[0].dosage == "1") {
+          if (
+            item.vaccination_monitoring[0].vaccine_manufacturer ==
+            "JOHNSON AND JOHNSON"
+          ) {
             this.vaccine = "J&J";
-          }else{
+          } else {
             this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
           }
-          this.vaccinationDate = new Date(item.vaccination_monitoring[0].vaccination_date);
-          this.printInfoFirstDose = `<tr><td style="width:150px">` + (this.vaccinationDate.getMonth() + 1) + "&emsp;&emsp;&nbsp;&nbsp;" + this.vaccinationDate.getDate() + "&emsp;&emsp;&nbsp;" + this.vaccinationDate.getFullYear().toString().substr(2,2) + `</td><td style="width:50px"></td>
-                                        <td style="width:85px">` + this.vaccine + `</td><td style="width:90px"></td>
-                                        <td style="width:100px">` + item.vaccination_monitoring[0].batch_number + `</td><td style="width:85px"></td>
-                                        <td style="width:100px">` + item.vaccination_monitoring[0].lot_number + `</td>
+          this.vaccinationDate = new Date(
+            item.vaccination_monitoring[0].vaccination_date
+          );
+          this.printInfoFirstDose =
+            `<tr><td style="width:150px">` +
+            (this.vaccinationDate.getMonth() + 1) +
+            "&emsp;&emsp;&nbsp;&nbsp;" +
+            this.vaccinationDate.getDate() +
+            "&emsp;&emsp;&nbsp;" +
+            this.vaccinationDate.getFullYear().toString().substr(2, 2) +
+            `</td><td style="width:50px"></td>
+                                        <td style="width:85px">` +
+            this.vaccine +
+            `</td><td style="width:90px"></td>
+                                        <td style="width:100px">` +
+            item.vaccination_monitoring[0].batch_number +
+            `</td><td style="width:85px"></td>
+                                        <td style="width:100px">` +
+            item.vaccination_monitoring[0].lot_number +
+            `</td>
                                       </tr>
                                       <tr><td style='height:34px'><br></td></tr>
-                                      <tr><td style="text-align:left" colspan="3">&nbsp` + item.vaccination_monitoring[0].last_name + ', ' + item.vaccination_monitoring[0].first_name + ' ' + item.vaccination_monitoring[0].middle_name[0] + `.</td></tr>`;
+                                      <tr><td style="text-align:left" colspan="3">&nbsp` +
+            item.vaccination_monitoring[0].last_name +
+            ", " +
+            item.vaccination_monitoring[0].first_name +
+            " " +
+            item.vaccination_monitoring[0].middle_name[0] +
+            `.</td></tr>`;
         }
-        if(item.vaccination_monitoring[1]){
-          if(item.vaccination_monitoring[1].dosage == "2"){
-            if(item.vaccination_monitoring[1].vaccine_manufacturer == "JOHNSON AND JOHNSON"){
-            this.vaccine = "J&J";
-            }else{
-              this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
+        if (item.vaccination_monitoring[1]) {
+          if (item.vaccination_monitoring[1].dosage == "2") {
+            if (
+              item.vaccination_monitoring[1].vaccine_manufacturer ==
+              "JOHNSON AND JOHNSON"
+            ) {
+              this.vaccine = "J&J";
+            } else {
+              this.vaccine =
+                item.vaccination_monitoring[0].vaccine_manufacturer;
             }
-            this.vaccinationDate = new Date(item.vaccination_monitoring[1].vaccination_date);
-            this.printInfoSecondDose = `<tr><td style="width:150px">` + (this.vaccinationDate.getMonth() + 1) + "&emsp;&emsp;&nbsp;&nbsp;" + this.vaccinationDate.getDate() + "&emsp;&emsp;&nbsp;" + this.vaccinationDate.getFullYear().toString().substr(2,2) + `</td><td style="width:50px"></td>
-                                          <td style="width:85px">` + this.vaccine + `</td><td style="width:90px"></td>
-                                          <td style="width:100px">` + item.vaccination_monitoring[1].batch_number + `</td><td style="width:85px"></td>
-                                          <td style="width:100px">` + item.vaccination_monitoring[1].lot_number + `</td>
+            this.vaccinationDate = new Date(
+              item.vaccination_monitoring[1].vaccination_date
+            );
+            this.printInfoSecondDose =
+              `<tr><td style="width:150px">` +
+              (this.vaccinationDate.getMonth() + 1) +
+              "&emsp;&emsp;&nbsp;&nbsp;" +
+              this.vaccinationDate.getDate() +
+              "&emsp;&emsp;&nbsp;" +
+              this.vaccinationDate.getFullYear().toString().substr(2, 2) +
+              `</td><td style="width:50px"></td>
+                                          <td style="width:85px">` +
+              this.vaccine +
+              `</td><td style="width:90px"></td>
+                                          <td style="width:100px">` +
+              item.vaccination_monitoring[1].batch_number +
+              `</td><td style="width:85px"></td>
+                                          <td style="width:100px">` +
+              item.vaccination_monitoring[1].lot_number +
+              `</td>
                                         </tr>
                                         <tr><td style='height:34px'><br></td></tr>
-                                        <tr><td style="text-align:left" colspan="3">&nbsp` + item.vaccination_monitoring[1].last_name + ', ' + item.vaccination_monitoring[1].first_name + ' ' + item.vaccination_monitoring[1].middle_name[1] + `.</td></tr>`;                     
+                                        <tr><td style="text-align:left" colspan="3">&nbsp` +
+              item.vaccination_monitoring[1].last_name +
+              ", " +
+              item.vaccination_monitoring[1].first_name +
+              " " +
+              item.vaccination_monitoring[1].middle_name[1] +
+              `.</td></tr>`;
           }
         }
       }
-                        
-      setTimeout(function(){
-        functionOutsideVue(this);
-                this.printAssessment();
-        this.printDialog = false;
-      }.bind(this), 1000)
+
+      setTimeout(
+        function () {
+          functionOutsideVue(this);
+        }.bind(this),
+        100
+      );
+
+      setTimeout(
+        function () {
+          this.printAssessment();
+        }.bind(this),
+        1000
+      );
     },
-    assignImage(){
+    assignImage() {
       this.img = canvas.toDataURL("image/png");
     },
     async printAssessment() {
       // Pass the element id here
-      
+
       await this.$htmlToPaper("print");
-     },
+    },
     changeStatus() {
       this.printDialog = true;
     },
     printCertificate(item) {
+      this.printDialog = true;
+      setTimeout(
+        function () {
+          this.printDialog = false;
+        }.bind(this),
+        0
+      );
       this.printDivHeight = "510px";
       this.printDivWidth = "50%";
       this.printDivMargin = "-60px 0px 0px 10px";
@@ -674,70 +810,148 @@ export default {
       this.printInfoFirstDoseFontSize = "8px";
       this.printInfoSecondDoseMargin = "-75px 0px 0px 60px";
       this.printInfoSecondDoseFontSize = "8px";
-      
-      this.sex = (item.pre_registration.sex == "01_MALE") ? "Male" : "Female";
+
+      this.sex = item.pre_registration.sex == "01_MALE" ? "Male" : "Female";
       // this.date_of_birth = new Date(item.pre_registration.date_of_birth);
       this.today = new Date();
       this.birthDate = new Date(item.pre_registration.date_of_birth);
       this.age = this.today.getFullYear() - this.birthDate.getFullYear();
       this.temp = this.today.getMonth() - this.birthDate.getMonth();
-      if (this.temp < 0 || (this.temp === 0 && this.today.getDate() < this.birthDate.getDate())) {
-          this.age--;
+      if (
+        this.temp < 0 ||
+        (this.temp === 0 && this.today.getDate() < this.birthDate.getDate())
+      ) {
+        this.age--;
       }
-      
+
       this.printDialog = true;
       this.value = item.qrcode;
       this.assessmentNumber = item.qrcode;
-      this.printInfo = `<tr><td class="pdetailsCert">Fullname:</td><td colspan="3">` + item.pre_registration.patient_name + `</td></tr>
-                        <tr><td class="pdetailsCert">Address:</td><td colspan="3">` + item.pre_registration.home_address + `</td></tr>
-                        <tr><td class="pdetailsCert">Mobile Number:</td><td>` + item.pre_registration.contact_number + `</td><td width="7px"></td>
-                          <td class="pdetailsCert">Age:</td><td>` + this.age + ` years old</td><td width="7px"></td>
-                          <td class="pdetailsCert">Sex:</td><td>` + this.sex + `</td></tr>
-                        <tr><td class="pdetailsCert">PhilHealth Number:</td><td>` + item.pre_registration.philhealth_number + `</td><td width="7px"></td>
-                          <td class="pdetailsCert">Category:</td><td>` + item.pre_registration.category_name + `</td><td width="7px"></td>
-                          <td class="pdetailsCert">Barangay:</td><td>` + item.pre_registration.barangay + `</td></tr>`;
-                          
-      if(item.vaccination_monitoring){
-        if(item.vaccination_monitoring[0].dosage == "1"){
-          if(item.vaccination_monitoring[0].vaccine_manufacturer == "JOHNSON AND JOHNSON"){
+      this.printInfo =
+        `<tr><td class="pdetailsCert">Fullname:</td><td colspan="3">` +
+        item.pre_registration.patient_name +
+        `</td></tr>
+                        <tr><td class="pdetailsCert">Address:</td><td colspan="3">` +
+        item.pre_registration.home_address +
+        `</td></tr>
+                        <tr><td class="pdetailsCert">Mobile Number:</td><td>` +
+        item.pre_registration.contact_number +
+        `</td><td width="7px"></td>
+                          <td class="pdetailsCert">Age:</td><td>` +
+        this.age +
+        ` years old</td><td width="7px"></td>
+                          <td class="pdetailsCert">Sex:</td><td>` +
+        this.sex +
+        `</td></tr>
+                        <tr><td class="pdetailsCert">PhilHealth Number:</td><td>` +
+        item.pre_registration.philhealth_number +
+        `</td><td width="7px"></td>
+                          <td class="pdetailsCert">Category:</td><td>` +
+        this.getCategoryName(item.pre_registration.category_id) +
+        `</td><td width="7px"></td>
+                          <td class="pdetailsCert">Barangay:</td><td>` +
+        item.pre_registration.barangay +
+        `</td></tr>`;
+
+      if (item.vaccination_monitoring) {
+        if (item.vaccination_monitoring[0].dosage == "1") {
+          if (
+            item.vaccination_monitoring[0].vaccine_manufacturer ==
+            "JOHNSON AND JOHNSON"
+          ) {
             this.vaccine = "J&J";
-          }else{
+          } else {
             this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
           }
-          this.vaccinationDate = new Date(item.vaccination_monitoring[0].vaccination_date);
-          this.printInfoFirstDose = `<tr><td style="width:90px">` + (this.vaccinationDate.getMonth() + 1) + "&emsp;&nbsp;&nbsp;" + this.vaccinationDate.getDate() + "&emsp;&emsp;&nbsp;" + this.vaccinationDate.getFullYear().toString().substr(2,2) + `</td><td style="width:10px"></td>
-                                        <td style="width:60px">` + this.vaccine + `</td><td style="width:30px"></td>
-                                        <td style="width:60px">` + item.vaccination_monitoring[0].batch_number + `</td><td style="width:30px"></td>
-                                        <td style="width:60px">` + item.vaccination_monitoring[0].lot_number + `</td>
+          this.vaccinationDate = new Date(
+            item.vaccination_monitoring[0].vaccination_date
+          );
+          this.printInfoFirstDose =
+            `<tr><td style="width:90px">` +
+            (this.vaccinationDate.getMonth() + 1) +
+            "&emsp;&nbsp;&nbsp;" +
+            this.vaccinationDate.getDate() +
+            "&emsp;&emsp;&nbsp;" +
+            this.vaccinationDate.getFullYear().toString().substr(2, 2) +
+            `</td><td style="width:10px"></td>
+                                        <td style="width:60px">` +
+            this.vaccine +
+            `</td><td style="width:30px"></td>
+                                        <td style="width:60px">` +
+            item.vaccination_monitoring[0].batch_number +
+            `</td><td style="width:30px"></td>
+                                        <td style="width:60px">` +
+            item.vaccination_monitoring[0].lot_number +
+            `</td>
                                       </tr>
                                       <tr><td style='height:15px'><br></td></tr>
-                                      <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` + item.vaccination_monitoring[0].last_name + ', ' + item.vaccination_monitoring[0].first_name + ' ' + item.vaccination_monitoring[0].middle_name[0] + `.</td></tr>`;
+                                      <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` +
+            item.vaccination_monitoring[0].last_name +
+            ", " +
+            item.vaccination_monitoring[0].first_name +
+            " " +
+            item.vaccination_monitoring[0].middle_name[0] +
+            `.</td></tr>`;
         }
-        if(item.vaccination_monitoring[1]){
-          if(item.vaccination_monitoring[1].dosage == "2"){
-            if(item.vaccination_monitoring[1].vaccine_manufacturer == "JOHNSON AND JOHNSON"){
+        if (item.vaccination_monitoring[1]) {
+          if (item.vaccination_monitoring[1].dosage == "2") {
+            if (
+              item.vaccination_monitoring[1].vaccine_manufacturer ==
+              "JOHNSON AND JOHNSON"
+            ) {
               this.vaccine = "J&J";
-            }else{
-              this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
+            } else {
+              this.vaccine =
+                item.vaccination_monitoring[0].vaccine_manufacturer;
             }
-            this.vaccinationDate = new Date(item.vaccination_monitoring[1].vaccination_date);
-            this.printInfoSecondDose = `<tr><td style="width:90px">` + (this.vaccinationDate.getMonth() + 1) + "&emsp;&nbsp;&nbsp;" + this.vaccinationDate.getDate() + "&emsp;&emsp;&nbsp;" + this.vaccinationDate.getFullYear().toString().substr(2,2) + `</td><td style="width:10px"></td>
-                                          <td style="width:60px">` + this.vaccine + `</td><td style="width:30px"></td>
-                                          <td style="width:60px">` + item.vaccination_monitoring[1].batch_number + `</td><td style="width:30px"></td>
-                                          <td style="width:60px">` + item.vaccination_monitoring[1].lot_number + `</td>
+            this.vaccinationDate = new Date(
+              item.vaccination_monitoring[1].vaccination_date
+            );
+            this.printInfoSecondDose =
+              `<tr><td style="width:90px">` +
+              (this.vaccinationDate.getMonth() + 1) +
+              "&emsp;&nbsp;&nbsp;" +
+              this.vaccinationDate.getDate() +
+              "&emsp;&emsp;&nbsp;" +
+              this.vaccinationDate.getFullYear().toString().substr(2, 2) +
+              `</td><td style="width:10px"></td>
+                                          <td style="width:60px">` +
+              this.vaccine +
+              `</td><td style="width:30px"></td>
+                                          <td style="width:60px">` +
+              item.vaccination_monitoring[1].batch_number +
+              `</td><td style="width:30px"></td>
+                                          <td style="width:60px">` +
+              item.vaccination_monitoring[1].lot_number +
+              `</td>
                                         </tr>
                                         <tr><td style='height:15px'><br></td></tr>
-                                        <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` + item.vaccination_monitoring[1].last_name + ', ' + item.vaccination_monitoring[1].first_name + ' ' + item.vaccination_monitoring[1].middle_name[1] + `.</td></tr>`;
+                                        <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` +
+              item.vaccination_monitoring[1].last_name +
+              ", " +
+              item.vaccination_monitoring[1].first_name +
+              " " +
+              item.vaccination_monitoring[1].middle_name[1] +
+              `.</td></tr>`;
           }
         }
       }
-      
-      setTimeout(function(){
-        functionOutsideVue(this);
-                this.printAssessment();
-        this.printDialog = false;
-        this.printDialogCert = false;
-      }.bind(this), 1000)
+
+      setTimeout(
+        function () {
+          functionOutsideVue(this);
+        }.bind(this),
+        100
+      );
+
+      setTimeout(
+        function () {
+          this.printAssessment();
+          this.printDialog = false;
+          this.printDialogCert = false;
+        }.bind(this),
+        1000
+      );
       // changeWidth(function () {
       //   this.width='50px';
       // })
@@ -809,10 +1023,26 @@ export default {
       console.log(this.search);
       this.getDataFromApi();
     },
+    getCategories() {
+      this.$store.dispatch(GET_CATEGORIES).then((data) => {
+        this.categories = data;
+      });
+    },
+    getCategoryName(id) {
+      let cat = "";
+      for (var x = 0; x < this.categories.length; x++) {
+        if (id == this.categories[x].id.toString()) {
+          cat = this.categories[x].category_name;
+        }
+      }
+
+      return cat;
+    },
   },
   created() {
     // this.initialize();
     // console.log("vac card");
+    this.getCategories();
   },
 };
 
