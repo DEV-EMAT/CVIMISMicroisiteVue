@@ -1216,6 +1216,29 @@ export default {
       question18: [],
       question17Arr: [],
       question19: false,
+
+      question_1: false,
+      question_2: false,
+      question_3: false,
+
+      question_4: false,
+      question_5: false,
+
+      question_6: false,
+      question_7: false,
+
+      question_8: false,
+
+      question_10: false,
+      question_11: false,
+      question_12: false,
+      question_13: false,
+      question_14: false,
+
+      question_15: false,
+      question_16: false,
+      question_18: false,
+      question_19: false,
     },
     hidepatient: [3, 5, 14, 17],
     questions: [
@@ -1522,7 +1545,7 @@ export default {
         this.monitorPatient.vaccination_date = moment(
           this.monitorPatient.vaccination_date
         ).format("MM/DD/YYYY");
-        let data = this.monitorPatient;;
+        let data = this.monitorPatient;
         this.$swal({
           title: "Confirm",
           text: "Are you sure you want to save this?",
@@ -1574,55 +1597,55 @@ export default {
       this.monitorPatient.question17Arr = answer.toString();
     },
     getAnswerSurvey() {
-      this.monitorPatient.question1 = this.getAnswerQuestion(
+      this.monitorPatient.question_1 = this.getAnswerQuestion(
         this.monitorPatient.question1
       );
-      this.monitorPatient.question2 = this.getAnswerQuestion(
+      this.monitorPatient.question_2 = this.getAnswerQuestion(
         this.monitorPatient.question2
       );
-      this.monitorPatient.question3 = this.getAnswerQuestion(
+      this.monitorPatient.question_3 = this.getAnswerQuestion(
         this.monitorPatient.question3
       );
-      this.monitorPatient.question4 = this.getAnswerQuestion(
+      this.monitorPatient.question_4 = this.getAnswerQuestion(
         this.monitorPatient.question4
       );
-      this.monitorPatient.question5 = this.getAnswerQuestion(
+      this.monitorPatient.question_5 = this.getAnswerQuestion(
         this.monitorPatient.question5
       );
-      this.monitorPatient.question6 = this.getAnswerQuestion(
+      this.monitorPatient.question_6 = this.getAnswerQuestion(
         this.monitorPatient.question6
       );
-      this.monitorPatient.question7 = this.getAnswerQuestion(
+      this.monitorPatient.question_7 = this.getAnswerQuestion(
         this.monitorPatient.question7
       );
-      this.monitorPatient.question8 = this.getAnswerQuestion(
+      this.monitorPatient.question_8 = this.getAnswerQuestion(
         this.monitorPatient.question8
       );
-      this.monitorPatient.question10 = this.getAnswerQuestion(
+      this.monitorPatient.question_10 = this.getAnswerQuestion(
         this.monitorPatient.question10
       );
-      this.monitorPatient.question11 = this.getAnswerQuestion(
+      this.monitorPatient.question_11 = this.getAnswerQuestion(
         this.monitorPatient.question11
       );
-      this.monitorPatient.question12 = this.getAnswerQuestion(
+      this.monitorPatient.question_12 = this.getAnswerQuestion(
         this.monitorPatient.question12
       );
-      this.monitorPatient.question13 = this.getAnswerQuestion(
+      this.monitorPatient.question_13 = this.getAnswerQuestion(
         this.monitorPatient.question13
       );
-      this.monitorPatient.question14 = this.getAnswerQuestion(
+      this.monitorPatient.question_14 = this.getAnswerQuestion(
         this.monitorPatient.question14
       );
-      this.monitorPatient.question15 = this.getAnswerQuestion(
+      this.monitorPatient.question_15 = this.getAnswerQuestion(
         this.monitorPatient.question15
       );
-      this.monitorPatient.question16 = this.getAnswerQuestion(
+      this.monitorPatient.question_16 = this.getAnswerQuestion(
         this.monitorPatient.question16
       );
-      this.monitorPatient.question18 = this.getAnswerQuestion(
+      this.monitorPatient.question_18 = this.getAnswerQuestion(
         this.monitorPatient.question18
       );
-      this.monitorPatient.question19 = this.getAnswerQuestion(
+      this.monitorPatient.question_19 = this.getAnswerQuestion(
         this.monitorPatient.question19
       );
     },
@@ -1692,7 +1715,6 @@ export default {
         this.monitorPatient.refusal = vac.reason_for_refusal;
         this.monitorPatient.deferral = vac.deferral;
 
-
         this.monitorPatient.question1 = this.getAnswer(vac.question_1);
         this.monitorPatient.question2 = this.getAnswer(vac.question_2);
         this.monitorPatient.question3 = this.getAnswer(vac.question_3);
@@ -1712,7 +1734,6 @@ export default {
         this.getAnswer17(vac.question_17);
         this.monitorPatient.question18 = this.getAnswer(vac.question_18);
         this.monitorPatient.question19 = this.getAnswer(vac.question_19);
-
       } else {
         this.isDisabled = false;
         this.monitorPatient.dosage = "1st";
@@ -1781,7 +1802,6 @@ export default {
           this.getAnswer17(vac.question_17);
           this.monitorPatient.question18 = this.getAnswer(vac.question_18);
           this.monitorPatient.question19 = this.getAnswer(vac.question_19);
-
         } else {
           this.isDisabled = false;
           this.monitorPatient.vaccinator = "";
@@ -2121,9 +2141,7 @@ export default {
         this.vaccineManufacturers = data;
       });
     },
-    check() {
-
-    },
+    check() {},
   },
 
   created() {
