@@ -563,6 +563,7 @@ export default {
     printInfoSecondDoseMargin: null,
     printInfoSecondDoseFontSize: null,
     vaccine: null,
+    vaccinator: null,
   }),
 
   computed: {
@@ -688,6 +689,14 @@ export default {
           } else {
             this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
           }
+          if(item.vaccination_monitoring[0].last_name) this.vaccinator = item.vaccination_monitoring[0].last_name;
+            if(item.vaccination_monitoring[0].suffix)
+              if( item.vaccination_monitoring[0].suffix != "NA")
+                this.vaccinator += " " + item.vaccination_monitoring[0].suffix;
+            this.vaccinator += ", ";
+          if(item.vaccination_monitoring[0].first_name) this.vaccinator += item.vaccination_monitoring[0].first_name + " ";
+          if(item.vaccination_monitoring[0].middle_name && item.vaccination_monitoring[0].middle_name != "NA") this.vaccinator += item.vaccination_monitoring[0].middle_name[0] + "";
+
           this.vaccinationDate = new Date(
             item.vaccination_monitoring[0].vaccination_date
           );
@@ -711,11 +720,7 @@ export default {
                                       </tr>
                                       <tr><td style='height:34px'><br></td></tr>
                                       <tr><td style="text-align:left" colspan="3">&nbsp` +
-            item.vaccination_monitoring[0].last_name +
-            ", " +
-            item.vaccination_monitoring[0].first_name +
-            " " +
-            item.vaccination_monitoring[0].middle_name[0] +
+            this.vaccinator +
             `.</td></tr>`;
         }
         if (item.vaccination_monitoring[1]) {
@@ -729,6 +734,13 @@ export default {
               this.vaccine =
                 item.vaccination_monitoring[0].vaccine_manufacturer;
             }
+            if(item.vaccination_monitoring[1].last_name) this.vaccinator = item.vaccination_monitoring[1].last_name;
+            if(item.vaccination_monitoring[1].suffix)
+              if( item.vaccination_monitoring[1].suffix != "NA")
+                this.vaccinator += " " + item.vaccination_monitoring[1].suffix;
+            this.vaccinator += ", ";
+            if(item.vaccination_monitoring[1].first_name) this.vaccinator += item.vaccination_monitoring[1].first_name + " ";
+            if(item.vaccination_monitoring[1].middle_name && item.vaccination_monitoring[1].middle_name != "NA") this.vaccinator += item.vaccination_monitoring[1].middle_name[0] + "";
             this.vaccinationDate = new Date(
               item.vaccination_monitoring[1].vaccination_date
             );
@@ -752,11 +764,7 @@ export default {
                                         </tr>
                                         <tr><td style='height:34px'><br></td></tr>
                                         <tr><td style="text-align:left" colspan="3">&nbsp` +
-              item.vaccination_monitoring[1].last_name +
-              ", " +
-              item.vaccination_monitoring[1].first_name +
-              " " +
-              item.vaccination_monitoring[1].middle_name[1] +
+              this.vaccinator +
               `.</td></tr>`;
           }
         }
@@ -863,6 +871,14 @@ export default {
           } else {
             this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
           }
+          if(item.vaccination_monitoring[0].last_name) this.vaccinator = item.vaccination_monitoring[0].last_name;
+            if(item.vaccination_monitoring[0].suffix)
+              if( item.vaccination_monitoring[0].suffix != "NA")
+                this.vaccinator += " " + item.vaccination_monitoring[0].suffix;
+            this.vaccinator += ", ";
+            if(item.vaccination_monitoring[0].first_name) this.vaccinator += item.vaccination_monitoring[0].first_name + " ";
+            if(item.vaccination_monitoring[0].middle_name && item.vaccination_monitoring[0].middle_name != "NA") this.vaccinator += item.vaccination_monitoring[0].middle_name[0] + "";
+          
           this.vaccinationDate = new Date(
             item.vaccination_monitoring[0].vaccination_date
           );
@@ -886,11 +902,7 @@ export default {
                                       </tr>
                                       <tr><td style='height:15px'><br></td></tr>
                                       <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` +
-            item.vaccination_monitoring[0].last_name +
-            ", " +
-            item.vaccination_monitoring[0].first_name +
-            " " +
-            item.vaccination_monitoring[0].middle_name[0] +
+            this.vaccinator +
             `.</td></tr>`;
         }
         if (item.vaccination_monitoring[1]) {
@@ -904,6 +916,14 @@ export default {
               this.vaccine =
                 item.vaccination_monitoring[0].vaccine_manufacturer;
             }
+            if(item.vaccination_monitoring[1].last_name) this.vaccinator = item.vaccination_monitoring[1].last_name;
+            if(item.vaccination_monitoring[1].suffix)
+              if( item.vaccination_monitoring[1].suffix != "NA")
+                this.vaccinator += " " + item.vaccination_monitoring[1].suffix;
+            this.vaccinator += ", ";
+            if(item.vaccination_monitoring[1].first_name) this.vaccinator += item.vaccination_monitoring[1].first_name + " ";
+            if(item.vaccination_monitoring[1].middle_name && item.vaccination_monitoring[1].middle_name != "NA") this.vaccinator += item.vaccination_monitoring[1].middle_name[0] + "";
+
             this.vaccinationDate = new Date(
               item.vaccination_monitoring[1].vaccination_date
             );
@@ -927,11 +947,7 @@ export default {
                                         </tr>
                                         <tr><td style='height:15px'><br></td></tr>
                                         <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` +
-              item.vaccination_monitoring[1].last_name +
-              ", " +
-              item.vaccination_monitoring[1].first_name +
-              " " +
-              item.vaccination_monitoring[1].middle_name[0] +
+              this.vaccinator +
               `.</td></tr>`;
           }
         }
