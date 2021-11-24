@@ -473,6 +473,8 @@
 </template>
 
 <script>
+// const Swal = SweetAlert;
+
 import QrcodeVue from "qrcode.vue";
 import { GET_QUALIFIED_PATIENT, GET_CATEGORIES } from "../store/transaction";
 

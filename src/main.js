@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import VueSweetalert2 from "vue-sweetalert2";
+import VueClipboard from 'vue-clipboard2'
 
 import "sweetalert2/dist/sweetalert2.min.css";
 import "./css/style.css";
@@ -36,6 +37,10 @@ const options = {
 Vue.use(VueHtmlToPaper, options);
 
 Vue.use(VueSweetalert2);
+
+
+VueClipboard.config.autoSetContainer = true
+Vue.use(VueClipboard);
 
 router.beforeEach((to, from, next) => {
   // Ensure we checked auth before each page load.

@@ -956,7 +956,7 @@
                               Deferral
                             </span>
                           </th>
-                          <!-- <th class="text-left">
+                          <th class="text-left">
                             <span
                               class="
                                 v-card__text
@@ -968,7 +968,7 @@
                             >
                               Action
                             </span>
-                          </th> -->
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1046,6 +1046,566 @@
                               }}
                             </div>
                           </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              <v-btn
+                                small
+                                dark
+                                class="my-1"
+                                color="teal"
+                                @click="editPatientDetails"
+                              >
+                                <v-icon left> mdi-pencil </v-icon> Update
+                              </v-btn>
+                              <v-btn
+                                small
+                                dark
+                                class="my-1"
+                                color="grey"
+                                @click="voidPatientDetails"
+                              >
+                                <v-icon left> mdi-delete </v-icon> Void
+                              </v-btn>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
+        <!-- View Vas Line Information -->
+        <v-dialog
+          v-model="vasLineDialog"
+          scrollable
+          persistent
+          max-width="1800px"
+        >
+          <v-card>
+            <v-card-title class="primary">
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-avatar color="green lighten-2" size="48">
+                    <v-icon color="white"> mdi-account </v-icon>
+                  </v-avatar>
+                  <!-- <v-icon large color="green darken-3"> mdi-account-search </v-icon> -->
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title class="white--text">
+                    VAS Line Information
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="white--text font-weight-light">
+                    Vaccination summary details
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+
+                <v-list-item-icon>
+                  <v-btn icon color="white" @click="vasLineDialog = false">
+                    <v-icon small> mdi-close </v-icon>
+                  </v-btn>
+                </v-list-item-icon>
+              </v-list-item>
+            </v-card-title>
+            <v-card-text class="pt-5" ref="container">
+              <input type="hidden" id="testing-code" :value="message" />
+              <v-row>
+                <v-col cols="12">
+                  <v-btn dark color="blue" @click="copy">
+                    Copy
+                    <v-icon small right> mdi-content-copy </v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <v-simple-table>
+                    <template v-slot:default>
+                      <thead>
+                        <tr>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Category
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Unique Person ID
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              PWD
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Indigenous Member
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Last Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              First Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Middle Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Suffix
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Contact No.
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Region
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Province
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Municipal / City
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Barangay
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Sex
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Birthdate
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Deferral
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Reason for Deferral
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Vaccination Date
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Vaccine Manafucturer Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Batch Number
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Lot No.
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Bakuna Center CBCR ID
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Vaccinator Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              1st Dose
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              2nd Dose
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Adverse Event
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Adverse Event Condition
+                            </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              CATEGORY
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              UNIQUE_PERSON_ID
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">PWD</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              Indigenous Member
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              LAST_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              FIRST_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              MIDDLE_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">SUFFIX</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              CONTACT_NO
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">REGION</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              PROVINCE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              MUNI_CITY
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              BARANGAY
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">SEX</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              BIRTHDATE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              DEFERRAL
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              REASON_FOR_DEFERRAL
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              VACCINATION_DATE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              VACCINE_MANUFACTURER_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              BATCH_NUMBER
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">LOT_NO</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              BAKUNA_CENTER_CBCR_ID
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              VACCINATOR_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              1ST_DOSE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              2ND_DOSE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              Adverse Event
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              Adverse Event Condition
+                            </div>
+                          </td>
                         </tr>
                       </tbody>
                     </template>
@@ -1087,11 +1647,22 @@
         depressed
         color="blue"
         dark
-        class="caption text-capitalize"
+        class="mr-2 caption text-capitalize"
         @click="viewVaccinationSummaryDialog(item)"
       >
         <v-icon left> mdi-view-list-outline </v-icon>
         Vaccination Summary
+      </v-btn>
+      <v-btn
+        small
+        depressed
+        color="teal"
+        dark
+        class="caption text-capitalize"
+        @click="viewVasLineDialog(item)"
+      >
+        <v-icon left> mdi-view-list-outline </v-icon>
+        Vas Line Info
       </v-btn>
     </template>
   </v-data-table>
@@ -1110,10 +1681,15 @@ import {
 export default {
   data: () => ({
     e1: 1,
+    message:
+      `A4\tVQSQ0000002921794270\tN\tNO\tAALA\tBERNADETTE\tFLORES\tNA\t09156621977\tREGION IV-A (CALABARZON)\t043400000Laguna\t043404000City of Cabuyao\tBANAYBANAY\tM\t10/26/1986\tN\tNONE\t08/17/2021\tSinovac\tH202107052\tNA\tCBC07625\tLINSAO, MELENOR\tY\tN\tN\tNONE\r\n
+      A4\tVQSQ0000002921794270\tN\tNO\tAALA\tBERNADETTE\tFLORES\tNA\t09156621977\tREGION IV-A (CALABARZON)\t043400000Laguna\t043404000City of Cabuyao\tBANAYBANAY\tM\t10/26/1986\tN\tNONE\t09/14/2021\tSinovac\tJ202108094\tJ202108094\tCBC07625\tBOLIBOL, RENZ MARION\tY\tY\tN\tNONE`,
     search: "",
     monitorPatientDialog: false,
     viewPatientDetailsDialog: false,
     vaccinationSummaryDialog: false,
+    editPatientDetailsDialog: false,
+    vasLineDialog: false,
     headers: [
       {
         text: "Patient Name",
@@ -2142,6 +2718,89 @@ export default {
       });
     },
     check() {},
+
+    async confirmPassword() {
+      return await this.$swal({
+        title: "Confirm Password",
+        // text: "Please confirm your password to continue.",
+        input: "password",
+        inputLabel: "Please confirm your password to continue.",
+        // inputPlaceholder: "Enter your password",
+        confirmButtonText: "Continue",
+        showCancelButton: true,
+        inputAttributes: {
+          maxlength: 10,
+          autocapitalize: "off",
+          autocorrect: "off",
+        },
+      });
+    },
+
+    async editPatientDetails() {
+      this.vaccinationSummaryDialog = false;
+
+      if (await this.confirmPassword()) {
+        this.monitorPatientDialog = true;
+      }
+    },
+
+    async voidPatientDetails() {
+      this.vaccinationSummaryDialog = false;
+
+      if (await this.confirmPassword()) {
+        this.$swal({
+          icon: "warning",
+          title: "Are you sure?",
+          text: "Do you really want to void this record? You won't be able to revert this.",
+          showCancelButton: true,
+          confirmButtonText: "Confirm",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.$swal({
+              icon: "success",
+              title: "Success!",
+              text: "Record voided successfully.",
+            });
+          }
+        });
+      }
+    },
+
+    viewVasLineDialog(item) {
+      this.vasLineDialog = true;
+      console.log(item);
+    },
+
+    copy() {
+      // let container = this.$refs.container;
+      // var text = "A4\tNA\tVKGE0000025218179077\tN\tNO\nA4\tNA\tVKGE0000025218179077\tN\tNO";
+      // this.$copyText(text, container).then(
+      //   function (e) {
+      //     // alert("Copied");
+      //     console.log(e);
+      //   },
+      //   function (e) {
+      //     // alert("Can not copy");
+      //     console.log(e);
+      //   }
+      // );
+
+      let testingCodeToCopy = document.querySelector("#testing-code");
+      testingCodeToCopy.setAttribute("type", "text");
+      testingCodeToCopy.select();
+
+      try {
+        var successful = document.execCommand("copy");
+        var msg = successful ? "successful" : "unsuccessful";
+        alert("Testing code was copied " + msg);
+      } catch (err) {
+        alert("Oops, unable to copy");
+      }
+
+      /* unselect the range */
+      testingCodeToCopy.setAttribute("type", "hidden");
+      window.getSelection().removeAllRanges();
+    },
   },
 
   created() {
