@@ -52,9 +52,7 @@
       <v-toolbar flat>
         <v-toolbar-title>
           <h5>Pre-reg Verification</h5>
-          <p class="caption">
-            Manage Pre-reg Verification
-          </p>
+          <p class="caption">Manage Pre-reg Verification</p>
         </v-toolbar-title>
         <v-spacer></v-spacer>
 
@@ -103,7 +101,7 @@
                       }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="white--text font-weight-light">
-                      please make sure all required fields are complete.
+                      please make sure all required fields are complete.dfsfdsf
                     </v-list-item-subtitle>
                   </v-list-item-content>
 
@@ -118,6 +116,11 @@
               <v-card-text>
                 <v-container>
                   <v-row align="center" justify="center">
+                    <v-col cols="12">
+                      <v-list-item-title class="font-weight-medium green--text text-uppercase">
+                        Basic Information
+                      </v-list-item-title>
+                    </v-col>
                     <v-col cols="12" sm="6" md="3">
                       <v-text-field
                         v-model="patient.last_name"
@@ -188,7 +191,13 @@
                         required
                       ></v-text-field>
                     </v-col>
-
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-list-item-title class="font-weight-medium green--text text-uppercase">
+                        Residential Address
+                      </v-list-item-title>
+                    </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-select
                         v-model="patient.barangay_obj"
@@ -213,6 +222,13 @@
                         required
                       >
                       </v-textarea>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-list-item-title class="font-weight-medium">
+                        Additional Information
+                      </v-list-item-title>
                     </v-col>
 
                     <v-col cols="12" sm="6" md="3">
@@ -325,6 +341,17 @@
                       >
                       </v-textarea>
                     </v-col>
+                  </v-row>
+
+                  <v-row><v-divider></v-divider></v-row>
+
+                  <v-row>
+                    <v-col cols="12">
+                      <v-list-item-title class="font-weight-medium green--text text-uppercase">
+                        Survey Questions
+                      </v-list-item-title>
+                    </v-col>
+
                     <v-col cols="12" sm="6" md="6">
                       <v-row>
                         <v-col>
@@ -394,6 +421,65 @@
                           ></v-checkbox>
                         </v-col>
                       </v-row>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-list-item-title class="font-weight-medium green--text text-uppercase">
+                        Parent/Guardian Information
+                      </v-list-item-title>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-text-field
+                        v-model="patient.gurdian_lname"
+                        label="Last Name"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-text-field
+                        v-model="patient.gurdian_fname"
+                        label="First Name"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-text-field
+                        v-model="patient.gurdian_mname"
+                        label="Middle Name"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-select
+                        v-model="patient.gurdian_suffix"
+                        :items="suffix"
+                        label="Suffix"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-text-field
+                        v-model="patient.gurdian_contact_number"
+                        label="Contact Number"
+                        prefix="+639"
+                        type="text"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-select
+                        v-model="patient.relationship"
+                        :items="relationships"
+                        label="Relationship"
+                        :rules="[(v) => !!v || 'Relationship is required']"
+                        required
+                      ></v-select>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -736,6 +822,7 @@ export default {
     id_categories: ["Sala", "Marinig", "Mamatid"],
     employee_status: ["Sala", "Marinig", "Mamatid"],
     professions: ["Sala", "Marinig", "Mamatid"],
+    relationships: ["Mother", "Father", "Guardian"],
     search: "",
     addEditdialog: false,
     editPatient: false,
@@ -828,6 +915,12 @@ export default {
       id_category: "",
       id_number: "",
       category_id_number: null,
+      gurdian_lname: "",
+      gurdian_fname: "",
+      gurdian_mname: "",
+      gurdian_suffix: "",
+      gurdian_contact_number: "",
+      relationship: null,
       barangay_obj: {
         id: null,
         barangay: null,
@@ -993,10 +1086,14 @@ export default {
                 );
                 this.getDataFromApi();
                 this.addEditdialog = false;
-              } else if(data.messages.includes("Please check your lastname, firstname, middlename and birthday!.")){
-                 this.$swal("Error", "Record already exist", "danger");
+              } else if (
+                data.messages.includes(
+                  "Please check your lastname, firstname, middlename and birthday!."
+                )
+              ) {
+                this.$swal("Error", "Record already exist", "danger");
                 this.addEditdialog = false;
-              }else {
+              } else {
                 this.$swal("Error", "Something went wrong", "danger");
                 this.addEditdialog = false;
               }
@@ -1126,7 +1223,6 @@ export default {
       this.answer.push(this.patient.surveys.question_2);
       this.answer.push(this.patient.surveys.question_4);
       this.answer.push(this.patient.surveys.question_9);
-
     },
     getEmployeeType(id) {
       let emp = "";
@@ -1283,7 +1379,6 @@ export default {
       } else {
         this.patient.withAlergyAnswer = "";
       }
-
     },
     validateQuestion2() {
       let answer = [];
@@ -1298,7 +1393,6 @@ export default {
       } else {
         this.patient.withComorbiditiesAnswer = "";
       }
-
     },
     getDataFromApi() {
       this.$emit("changeValue", true);
