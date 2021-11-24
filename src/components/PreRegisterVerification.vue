@@ -343,8 +343,6 @@
                     </v-col>
                   </v-row>
 
-                  <v-row><v-divider></v-divider></v-row>
-
                   <v-row>
                     <v-col cols="12">
                       <v-list-item-title class="font-weight-medium green--text text-uppercase">
