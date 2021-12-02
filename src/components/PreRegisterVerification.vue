@@ -1323,7 +1323,8 @@ export default {
           this.desserts = items;
           this.desserts.forEach((item) => {
             item.patient_name =
-              item.first_name + " " + item.middle_name + " " + item.last_name;
+              item.first_name + " " + item.middle_name + " " + item.last_name +
+              " " + (item.suffix != "NA" ? item.suffix : "");
             item.civil_status = item.civil_status.substr(3);
             item.sex = item.sex.substr(3);
             item.contact_number = item.contact_number.substr(2);

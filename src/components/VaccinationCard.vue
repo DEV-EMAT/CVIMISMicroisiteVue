@@ -1026,7 +1026,8 @@ export default {
               " " +
               item.pre_registration.middle_name +
               " " +
-              item.pre_registration.last_name;
+              item.pre_registration.last_name + 
+              " " + (item.pre_registration.suffix != "NA" ? item.pre_registration.suffix : "");
           });
           this.totalDesserts = data.meta.total;
           this.loading = false;
