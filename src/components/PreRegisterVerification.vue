@@ -52,9 +52,7 @@
       <v-toolbar flat>
         <v-toolbar-title>
           <h5>Pre-reg Verification</h5>
-          <p class="caption">
-            Manage Pre-reg Verification
-          </p>
+          <p class="caption">Manage Pre-reg Verification</p>
         </v-toolbar-title>
         <v-spacer></v-spacer>
 
@@ -103,7 +101,7 @@
                       }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="white--text font-weight-light">
-                      please make sure all required fields are complete.
+                      please make sure all required fields are complete.dfsfdsf
                     </v-list-item-subtitle>
                   </v-list-item-content>
 
@@ -118,6 +116,13 @@
               <v-card-text>
                 <v-container>
                   <v-row align="center" justify="center">
+                    <v-col cols="12">
+                      <v-list-item-title
+                        class="font-weight-medium green--text text-uppercase"
+                      >
+                        Basic Information
+                      </v-list-item-title>
+                    </v-col>
                     <v-col cols="12" sm="6" md="3">
                       <v-text-field
                         v-model="patient.last_name"
@@ -155,6 +160,7 @@
                         v-model="patient.date_of_birth"
                         label="Date of Birth"
                         type="date"
+                        @keyup="verifyAge"
                         :rules="[(v) => !!v || 'Date of Birth is required']"
                         required
                       ></v-text-field>
@@ -188,7 +194,15 @@
                         required
                       ></v-text-field>
                     </v-col>
-
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-list-item-title
+                        class="font-weight-medium green--text text-uppercase"
+                      >
+                        Residential Address
+                      </v-list-item-title>
+                    </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-select
                         v-model="patient.barangay_obj"
@@ -213,6 +227,13 @@
                         required
                       >
                       </v-textarea>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-list-item-title class="font-weight-medium">
+                        Additional Information
+                      </v-list-item-title>
                     </v-col>
 
                     <v-col cols="12" sm="6" md="3">
@@ -325,6 +346,17 @@
                       >
                       </v-textarea>
                     </v-col>
+                  </v-row>
+
+                  <v-row>
+                    <v-col cols="12">
+                      <v-list-item-title
+                        class="font-weight-medium green--text text-uppercase"
+                      >
+                        Survey Questions
+                      </v-list-item-title>
+                    </v-col>
+
                     <v-col cols="12" sm="6" md="6">
                       <v-row>
                         <v-col>
@@ -394,6 +426,67 @@
                           ></v-checkbox>
                         </v-col>
                       </v-row>
+                    </v-col>
+                  </v-row>
+                  <v-row v-if="isMinor">
+                    <v-col cols="12">
+                      <v-list-item-title
+                        class="font-weight-medium green--text text-uppercase"
+                      >
+                        Parent/Guardian Information
+                      </v-list-item-title>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-text-field
+                        v-model="patient.gurdian_lname"
+                        label="Last Name"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-text-field
+                        v-model="patient.gurdian_fname"
+                        label="First Name"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-text-field
+                        v-model="patient.gurdian_mname"
+                        label="Middle Name"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-select
+                        v-model="patient.gurdian_suffix"
+                        :items="suffix"
+                        label="Suffix"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-text-field
+                        v-model="patient.gurdian_contact_number"
+                        label="Contact Number"
+                        prefix="+639"
+                        type="text"
+                        :rules="[(v) => !!v || 'This field is required.']"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                      <v-select
+                        v-model="patient.relationship"
+                        :items="relationships"
+                        label="Relationship"
+                        :rules="[(v) => !!v || 'Relationship is required']"
+                        required
+                      ></v-select>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -699,7 +792,6 @@
 
 <script>
 import moment from "moment";
-
 import {
   GET_BARANGAY,
   GET_CATEGORIES,
@@ -711,7 +803,6 @@ import {
   ADD_PREREG,
   UPDATE_PREREG,
 } from "../store/transaction";
-
 export default {
   data: () => ({
     suffix: ["II", "III", "IV", "V", "JR", "SR", "NA"],
@@ -736,6 +827,7 @@ export default {
     id_categories: ["Sala", "Marinig", "Mamatid"],
     employee_status: ["Sala", "Marinig", "Mamatid"],
     professions: ["Sala", "Marinig", "Mamatid"],
+    relationships: ["MOTHER", "FATHER", "GUARDIAN"],
     search: "",
     addEditdialog: false,
     editPatient: false,
@@ -828,6 +920,13 @@ export default {
       id_category: "",
       id_number: "",
       category_id_number: null,
+      gurdian_id: null,
+      gurdian_lname: "",
+      gurdian_fname: "",
+      gurdian_mname: "",
+      gurdian_suffix: "",
+      gurdian_contact_number: "",
+      relationship: null,
       barangay_obj: {
         id: null,
         barangay: null,
@@ -867,6 +966,7 @@ export default {
     answer: [],
     valid: true,
     isSearchDisabled: false,
+    age: 0,
     path: "https://cvimsmicro.com/images/",
   }),
   computed: {
@@ -893,7 +993,6 @@ export default {
     //   this.barangays.forEach((item) => {
     //     bar.push(item.real_name);
     //   });
-
     //   return bar;
     // },
     arrCategories() {
@@ -901,8 +1000,14 @@ export default {
       this.categories.forEach((item) => {
         bar.push(item.category_name);
       });
-
       return bar;
+    },
+    isMinor() {
+      if (this.age < 18) {
+        return true;
+      }
+
+      return false;
     },
   },
   watch: {
@@ -955,13 +1060,11 @@ export default {
       this.answer.push(this.patient.surveys.question_4);
       this.answer.push(this.patient.surveys.question_9);
     },
-
     addNew() {
       this.patient = {};
       this.addEditdialog = true;
       this.editPatient = false;
     },
-
     savePatient() {
       if (this.validate()) {
         this.validateQuestion1();
@@ -973,7 +1076,6 @@ export default {
         this.patient.date_of_birth = moment(this.patient.date_of_birth).format(
           "MM/DD/YYYY"
         );
-
         this.$swal({
           title: "Confirm",
           text: "Are you sure you want to add pre-registration?",
@@ -993,10 +1095,14 @@ export default {
                 );
                 this.getDataFromApi();
                 this.addEditdialog = false;
-              } else if(data.messages.includes("Please check your lastname, firstname, middlename and birthday!.")){
-                 this.$swal("Error", "Record already exist", "danger");
+              } else if (
+                data.messages.includes(
+                  "Please check your lastname, firstname, middlename and birthday!."
+                )
+              ) {
+                this.$swal("Error", "Record already exist", "danger");
                 this.addEditdialog = false;
-              }else {
+              } else {
                 this.$swal("Error", "Something went wrong", "danger");
                 this.addEditdialog = false;
               }
@@ -1005,7 +1111,6 @@ export default {
         });
       }
     },
-
     getSex(sex) {
       let s = "";
       if (sex == "MALE") {
@@ -1013,10 +1118,8 @@ export default {
       } else if (sex == "FEMALE") {
         s = "02_FEMALE";
       }
-
       return s;
     },
-
     getCivilStatus(civil) {
       let c = "";
       if (civil == "SINGLE") {
@@ -1032,7 +1135,6 @@ export default {
       }
       return c;
     },
-
     getSexType(sex) {
       let s = "";
       if (sex == "01_MALE") {
@@ -1040,10 +1142,8 @@ export default {
       } else {
         s = "FEMALE";
       }
-
       return s;
     },
-
     getCivilStatusType(civil) {
       let c = "";
       if (civil == "01_SINGLE") {
@@ -1059,8 +1159,8 @@ export default {
       }
       return c;
     },
-
     addEdit(patient) {
+      console.log(patient);
       this.addEditdialog = true;
       // if (status == 1) this.verifyPatient = false;
       // else this.verifyPatient = true;
@@ -1104,11 +1204,11 @@ export default {
           id: Number(this.patient.barangay_id),
           barangay: this.patient.barangay,
         });
-
       // this.patient.date_of_birth = this.patient.date_of_birth.replace(/[/]/g, "-");
       this.patient.date_of_birth = moment(this.patient.date_of_birth).format(
         "YYYY-MM-DD"
       );
+      this.verifyAge();
       this.patient.withAlergy =
         this.patient.surveys.question_2 == "YES" ? true : false;
       this.patient.withComorbidities =
@@ -1116,7 +1216,6 @@ export default {
       if (this.patient.surveys.question_2 == "YES") {
         this.getAnswerWithAllergy(this.patient.surveys.question_3);
       }
-
       if (this.patient.surveys.question_4 == "YES") {
         this.getAnswerWithComorbidities(this.patient.surveys.question_5);
       }
@@ -1126,7 +1225,6 @@ export default {
       this.answer.push(this.patient.surveys.question_2);
       this.answer.push(this.patient.surveys.question_4);
       this.answer.push(this.patient.surveys.question_9);
-
     },
     getEmployeeType(id) {
       let emp = "";
@@ -1136,7 +1234,6 @@ export default {
           break;
         }
       }
-
       return emp;
     },
     getEmployeeTypeFormat(id) {
@@ -1147,7 +1244,6 @@ export default {
           break;
         }
       }
-
       return emp;
     },
     getProfessionType(id) {
@@ -1158,7 +1254,6 @@ export default {
           break;
         }
       }
-
       return emp;
     },
     getProfessionTypeFormat(id) {
@@ -1169,7 +1264,6 @@ export default {
           break;
         }
       }
-
       return emp;
     },
     getAnswerWithComorbidities(answer) {
@@ -1258,7 +1352,6 @@ export default {
                   "Patient pre-registration informatiom has been updated successfully.",
                   "success"
                 );
-
                 this.getDataFromApi();
                 this.addEditdialog = false;
               } else {
@@ -1278,12 +1371,10 @@ export default {
             answer.push(this.allergies[x].name);
           }
         }
-
         this.patient.withAlergyAnswer = answer.toString();
       } else {
         this.patient.withAlergyAnswer = "";
       }
-
     },
     validateQuestion2() {
       let answer = [];
@@ -1293,12 +1384,10 @@ export default {
             answer.push(this.commorbidities[x].name);
           }
         }
-
         this.patient.withComorbiditiesAnswer = answer.toString();
       } else {
         this.patient.withComorbiditiesAnswer = "";
       }
-
     },
     getDataFromApi() {
       this.$emit("changeValue", true);
@@ -1306,7 +1395,6 @@ export default {
       this.loading = true;
       const search_key = this.search;
       const { page, itemsPerPage } = this.options;
-
       this.$store
         .dispatch(GET_PREREG_VERIFICATION, {
           items_per_page: itemsPerPage,
@@ -1315,22 +1403,34 @@ export default {
         })
         .then((data) => {
           let items = data.data;
-
           // if (itemsPerPage > 0) {
           //   items = items.slice((page - 1) * itemsPerPage, page * itemsPerPage);
           // }
-
           this.desserts = items;
           this.desserts.forEach((item) => {
             item.patient_name =
-              item.first_name + " " + item.middle_name + " " + item.last_name;
+              item.first_name +
+              " " +
+              item.middle_name +
+              " " +
+              item.last_name +
+              " " +
+              (item.suffix != "NA" ? item.suffix : "");
             item.civil_status = item.civil_status.substr(3);
             item.sex = item.sex.substr(3);
             item.contact_number = item.contact_number.substr(2);
+            if (item.guardians != null) {
+              item.gurdian_id = item.guardians.id;
+              item.gurdian_lname = item.guardians.last_name;
+              item.gurdian_fname = item.guardians.last_name;
+              item.gurdian_mname = item.guardians.middle_name;
+              item.gurdian_suffix = item.guardians.suffix;
+              item.gurdian_contact_number = item.guardians.contact_number;
+              item.relationship = item.guardians.relationship;
+            }
           });
           this.totalDesserts = data.meta.total;
           this.loading = false;
-
           this.isSearchDisabled = false;
           this.$emit("changeValue", false);
         });
@@ -1363,6 +1463,12 @@ export default {
     searchData() {
       this.isSearchDisabled = true;
       this.getDataFromApi();
+    },
+    verifyAge() {
+      var a = moment();
+      var b = moment(this.patient.date_of_birth);
+      this.age = a.diff(b, "years");
+      console.log(this.age);
     },
   },
   created() {
@@ -1423,7 +1529,6 @@ export default {
         isChecked: false,
       },
     ];
-
     this.allergies = [
       {
         id: 1,

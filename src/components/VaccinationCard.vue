@@ -532,7 +532,7 @@ export default {
       "Provide Electronic Informed Consent?",
     ],
     answer: [],
-    path: "http://192.168.100.197:8089/images/",
+    path: "https://cvimsmicro.com/images/",
     printDialog: false,
     printDialogCert: false,
     assessmentNumber: null,
