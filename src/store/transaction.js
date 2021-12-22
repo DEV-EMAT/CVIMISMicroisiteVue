@@ -23,8 +23,8 @@ export const GET_VASLINE_INFO = "getVasLineInfo";
 
 // mutation types
 
-instance.defaults.baseURL = "https://cvimsmicro.com/api";
-// instance.defaults.baseURL = "https://cvimsmicro.com/api";
+instance.defaults.baseURL = process.env.VUE_APP_API_END_POINT;
+
 
 const state = {
   token: apiservice.getToken()

@@ -12,8 +12,7 @@ export const PURGE_AUTH = "logOut";
 export const SET_AUTH = "setUser";
 export const SET_ERROR = "setError";
 
-instance.defaults.baseURL = "https://cvimsmicro.com/api";
-// instance.defaults.baseURL = "https://cvimsmicro.com/api";
+instance.defaults.baseURL = process.env.VUE_APP_API_END_POINT;
 
 const state = {
   errors: null,

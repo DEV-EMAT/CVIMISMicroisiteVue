@@ -967,7 +967,7 @@ export default {
     valid: true,
     isSearchDisabled: false,
     age: 0,
-    path: "https://cvimsmicro.com/images/",
+    path: process.env.VUE_APP_STORAGE_END_POINT,
   }),
   computed: {
     // formTitle() {
