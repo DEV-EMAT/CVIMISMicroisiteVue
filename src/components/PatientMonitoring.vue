@@ -1501,9 +1501,9 @@
                           </th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody v-for="(vasline, i) in vasLine" :key="i">
                         <tr>
-                          <td v-for="(vas, index) in vasLine" :key="index">
+                          <td v-for="(vas, index) in vasline" :key="index">
                             <div class="grey--text text--darken-1">
                               {{ vas }}
                             </div>
@@ -2942,7 +2942,7 @@ export default {
       this.isCopyCode = false;
       console.log(item);
       this.$store.dispatch(GET_VASLINE_INFO, { id: item.id }).then((data) => {
-        this.vasLine = data[0];
+        this.vasLine = data;
         this.vasLineCopy = this.vasLine.join(" ");
       });
     },
