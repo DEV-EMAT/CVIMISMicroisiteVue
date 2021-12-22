@@ -1031,8 +1031,6 @@ export default {
           });
           this.totalDesserts = data.meta.total;
           this.loading = false;
-
-          console.log(data.data);
           this.$emit("changeValue", false);
         });
     },
