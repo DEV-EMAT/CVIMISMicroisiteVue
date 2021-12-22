@@ -408,7 +408,7 @@
           <v-card-actions class="grey lighten-5 py-4">
             <v-spacer></v-spacer>
             <v-btn small text @click="printDialogCert = false"> Cancel </v-btn>
-            <v-btn
+            <!-- <v-btn
               small
               text
               color="primary"
@@ -416,7 +416,7 @@
               @click="printCert"
             >
               Print</v-btn
-            >
+            > -->
           </v-card-actions>
         </v-dialog>
       </v-toolbar>
@@ -532,7 +532,7 @@ export default {
       "Provide Electronic Informed Consent?",
     ],
     answer: [],
-    path: "http://192.168.100.197:8089/images/",
+    path: process.env.VUE_APP_STORAGE_END_POINT,
     printDialog: false,
     printDialogCert: false,
     assessmentNumber: null,
@@ -612,6 +612,8 @@ export default {
     // },
     showDialog(item) {
       console.log(item);
+      this.printInfoFirstDose = "";
+      this.printInfoSecondDose = "";
       this.printDialog = true;
       setTimeout(
         function () {
@@ -689,13 +691,20 @@ export default {
           } else {
             this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
           }
-          if(item.vaccination_monitoring[0].last_name) this.vaccinator = item.vaccination_monitoring[0].last_name;
-            if(item.vaccination_monitoring[0].suffix)
-              if( item.vaccination_monitoring[0].suffix != "NA")
-                this.vaccinator += " " + item.vaccination_monitoring[0].suffix;
-            this.vaccinator += ", ";
-          if(item.vaccination_monitoring[0].first_name) this.vaccinator += item.vaccination_monitoring[0].first_name + " ";
-          if(item.vaccination_monitoring[0].middle_name && item.vaccination_monitoring[0].middle_name != "NA") this.vaccinator += item.vaccination_monitoring[0].middle_name[0] + "";
+          if (item.vaccination_monitoring[0].last_name)
+            this.vaccinator = item.vaccination_monitoring[0].last_name;
+          if (item.vaccination_monitoring[0].suffix)
+            if (item.vaccination_monitoring[0].suffix != "NA")
+              this.vaccinator += " " + item.vaccination_monitoring[0].suffix;
+          this.vaccinator += ", ";
+          if (item.vaccination_monitoring[0].first_name)
+            this.vaccinator += item.vaccination_monitoring[0].first_name + " ";
+          if (
+            item.vaccination_monitoring[0].middle_name &&
+            item.vaccination_monitoring[0].middle_name != "NA"
+          )
+            this.vaccinator +=
+              item.vaccination_monitoring[0].middle_name[0] + "";
 
           this.vaccinationDate = new Date(
             item.vaccination_monitoring[0].vaccination_date
@@ -734,13 +743,21 @@ export default {
               this.vaccine =
                 item.vaccination_monitoring[0].vaccine_manufacturer;
             }
-            if(item.vaccination_monitoring[1].last_name) this.vaccinator = item.vaccination_monitoring[1].last_name;
-            if(item.vaccination_monitoring[1].suffix)
-              if( item.vaccination_monitoring[1].suffix != "NA")
+            if (item.vaccination_monitoring[1].last_name)
+              this.vaccinator = item.vaccination_monitoring[1].last_name;
+            if (item.vaccination_monitoring[1].suffix)
+              if (item.vaccination_monitoring[1].suffix != "NA")
                 this.vaccinator += " " + item.vaccination_monitoring[1].suffix;
             this.vaccinator += ", ";
-            if(item.vaccination_monitoring[1].first_name) this.vaccinator += item.vaccination_monitoring[1].first_name + " ";
-            if(item.vaccination_monitoring[1].middle_name && item.vaccination_monitoring[1].middle_name != "NA") this.vaccinator += item.vaccination_monitoring[1].middle_name[0] + "";
+            if (item.vaccination_monitoring[1].first_name)
+              this.vaccinator +=
+                item.vaccination_monitoring[1].first_name + " ";
+            if (
+              item.vaccination_monitoring[1].middle_name &&
+              item.vaccination_monitoring[1].middle_name != "NA"
+            )
+              this.vaccinator +=
+                item.vaccination_monitoring[1].middle_name[0] + "";
             this.vaccinationDate = new Date(
               item.vaccination_monitoring[1].vaccination_date
             );
@@ -796,6 +813,8 @@ export default {
       this.printDialog = true;
     },
     printCertificate(item) {
+      this.printInfoFirstDose = "";
+      this.printInfoSecondDose = "";
       this.printDialog = true;
       setTimeout(
         function () {
@@ -871,14 +890,21 @@ export default {
           } else {
             this.vaccine = item.vaccination_monitoring[0].vaccine_manufacturer;
           }
-          if(item.vaccination_monitoring[0].last_name) this.vaccinator = item.vaccination_monitoring[0].last_name;
-            if(item.vaccination_monitoring[0].suffix)
-              if( item.vaccination_monitoring[0].suffix != "NA")
-                this.vaccinator += " " + item.vaccination_monitoring[0].suffix;
-            this.vaccinator += ", ";
-            if(item.vaccination_monitoring[0].first_name) this.vaccinator += item.vaccination_monitoring[0].first_name + " ";
-            if(item.vaccination_monitoring[0].middle_name && item.vaccination_monitoring[0].middle_name != "NA") this.vaccinator += item.vaccination_monitoring[0].middle_name[0] + "";
-          
+          if (item.vaccination_monitoring[0].last_name)
+            this.vaccinator = item.vaccination_monitoring[0].last_name;
+          if (item.vaccination_monitoring[0].suffix)
+            if (item.vaccination_monitoring[0].suffix != "NA")
+              this.vaccinator += " " + item.vaccination_monitoring[0].suffix;
+          this.vaccinator += ", ";
+          if (item.vaccination_monitoring[0].first_name)
+            this.vaccinator += item.vaccination_monitoring[0].first_name + " ";
+          if (
+            item.vaccination_monitoring[0].middle_name &&
+            item.vaccination_monitoring[0].middle_name != "NA"
+          )
+            this.vaccinator +=
+              item.vaccination_monitoring[0].middle_name[0] + "";
+
           this.vaccinationDate = new Date(
             item.vaccination_monitoring[0].vaccination_date
           );
@@ -916,13 +942,21 @@ export default {
               this.vaccine =
                 item.vaccination_monitoring[0].vaccine_manufacturer;
             }
-            if(item.vaccination_monitoring[1].last_name) this.vaccinator = item.vaccination_monitoring[1].last_name;
-            if(item.vaccination_monitoring[1].suffix)
-              if( item.vaccination_monitoring[1].suffix != "NA")
+            if (item.vaccination_monitoring[1].last_name)
+              this.vaccinator = item.vaccination_monitoring[1].last_name;
+            if (item.vaccination_monitoring[1].suffix)
+              if (item.vaccination_monitoring[1].suffix != "NA")
                 this.vaccinator += " " + item.vaccination_monitoring[1].suffix;
             this.vaccinator += ", ";
-            if(item.vaccination_monitoring[1].first_name) this.vaccinator += item.vaccination_monitoring[1].first_name + " ";
-            if(item.vaccination_monitoring[1].middle_name && item.vaccination_monitoring[1].middle_name != "NA") this.vaccinator += item.vaccination_monitoring[1].middle_name[0] + "";
+            if (item.vaccination_monitoring[1].first_name)
+              this.vaccinator +=
+                item.vaccination_monitoring[1].first_name + " ";
+            if (
+              item.vaccination_monitoring[1].middle_name &&
+              item.vaccination_monitoring[1].middle_name != "NA"
+            )
+              this.vaccinator +=
+                item.vaccination_monitoring[1].middle_name[0] + "";
 
             this.vaccinationDate = new Date(
               item.vaccination_monitoring[1].vaccination_date

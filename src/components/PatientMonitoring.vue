@@ -93,11 +93,7 @@
                   </v-list-item-content>
 
                   <v-list-item-icon>
-                    <v-btn
-                      icon
-                      color="white"
-                      @click="monitorPatientDialog = false"
-                    >
+                    <v-btn icon color="white" @click="cancelDialog">
                       <v-icon small> mdi-close </v-icon>
                     </v-btn>
                   </v-list-item-icon>
@@ -119,6 +115,7 @@
                         label="Dosage"
                         v-model="monitorPatient.dosage"
                         @change="changeDosage"
+                        :disabled="vaccineSummaryEdit"
                       ></v-select>
                     </v-col>
                     <v-col cols="12" sm="6">
@@ -213,7 +210,20 @@
                       </v-textarea>
                     </v-col>
 
-                    <v-col cols="12">
+                    <v-col v-if="vaccineSummaryEdit" cols="12" sm="6">
+                      <v-textarea
+                        v-model="reason_for_update"
+                        label="Reason for update"
+                        type="text"
+                        auto-grow
+                        rows="1"
+                        :rules="[(v) => !!v || 'Reason for update is required']"
+                        :disabled="isDisabled"
+                      >
+                      </v-textarea>
+                    </v-col>
+
+                    <v-col cols="12" v-if="!vaccineSummaryEdit">
                       <v-simple-table>
                         <template v-slot:default>
                           <thead>
@@ -557,15 +567,25 @@
               </v-card-text>
               <v-card-actions class="grey lighten-5 py-4">
                 <v-spacer></v-spacer>
-                <v-btn small text @click="monitorPatientDialog = false">
-                  Cancel
-                </v-btn>
+                <v-btn small text @click="cancelDialog"> Cancel </v-btn>
                 <v-btn
+                  v-if="!vaccineSummaryEdit"
                   small
                   text
                   color="primary"
                   class="white--text"
                   @click="saveMonitorPatient"
+                  :disabled="isDisabled"
+                >
+                  Submit
+                </v-btn>
+                <v-btn
+                  v-else
+                  small
+                  text
+                  color="primary"
+                  class="white--text"
+                  @click="saveEditSummary"
                   :disabled="isDisabled"
                 >
                   Submit
@@ -956,7 +976,7 @@
                               Deferral
                             </span>
                           </th>
-                          <!-- <th class="text-left">
+                          <th class="text-left">
                             <span
                               class="
                                 v-card__text
@@ -968,7 +988,7 @@
                             >
                               Action
                             </span>
-                          </th> -->
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -983,7 +1003,9 @@
                               {{
                                 vac_summary.dosage == "1"
                                   ? " 1st Dose"
-                                  : "2nd Dose"
+                                  : vac_summary.dosage == "2"
+                                  ? "2nd Dose"
+                                  : "3rd Dose(Booster)"
                               }}
                             </div>
                           </td>
@@ -1046,6 +1068,566 @@
                               }}
                             </div>
                           </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              <v-btn
+                                small
+                                dark
+                                class="my-1"
+                                color="teal"
+                                @click="editPatientDetails(vac_summary)"
+                              >
+                                <v-icon left> mdi-pencil </v-icon> Update
+                              </v-btn>
+                              <!-- <v-btn
+                                small
+                                dark
+                                class="my-1"
+                                color="grey"
+                                @click="voidPatientDetails(vac_summary)"
+                              >
+                                <v-icon left> mdi-delete </v-icon> Void
+                              </v-btn> -->
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
+        <!-- View Vas Line Information -->
+        <v-dialog
+          v-model="vasLineDialog"
+          scrollable
+          persistent
+          max-width="1800px"
+        >
+          <v-card>
+            <v-card-title class="primary">
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-avatar color="green lighten-2" size="48">
+                    <v-icon color="white"> mdi-account </v-icon>
+                  </v-avatar>
+                  <!-- <v-icon large color="green darken-3"> mdi-account-search </v-icon> -->
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title class="white--text">
+                    VAS Line Information
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="white--text font-weight-light">
+                    Vaccination summary details
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+
+                <v-list-item-icon>
+                  <v-btn icon color="white" @click="vasLineDialog = false">
+                    <v-icon small> mdi-close </v-icon>
+                  </v-btn>
+                </v-list-item-icon>
+              </v-list-item>
+            </v-card-title>
+            <v-card-text class="pt-5" ref="container">
+              <input type="hidden" id="testing-code" :value="vasLineCopy" />
+              <v-row>
+                <v-col cols="12">
+                  <v-btn dark color="blue" @click="copy">
+                    {{ isCopyCode ? "Copied" : "Copy" }}
+                    <v-icon small right> mdi-content-copy </v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <v-simple-table>
+                    <template v-slot:default>
+                      <thead>
+                        <tr>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Category
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Unique Person ID
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              PWD
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Indigenous Member
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Last Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              First Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Middle Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Suffix
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Contact No.
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Region
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Province
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Municipal / City
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Barangay
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Sex
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Birthdate
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Deferral
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Reason for Deferral
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Vaccination Date
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Vaccine Manafucturer Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Batch Number
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Lot No.
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Bakuna Center CBCR ID
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Vaccinator Name
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              1st Dose
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              2nd Dose
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Adverse Event
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
+                              Adverse Event Condition
+                            </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td v-for="(vas, index) in vasLine" :key="index">
+                            <div class="grey--text text--darken-1">
+                              {{ vas }}
+                            </div>
+                          </td>
+                          <!-- <td>
+                            <div class="grey--text text--darken-1">
+                              UNIQUE_PERSON_ID
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">PWD</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              Indigenous Member
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              LAST_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              FIRST_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              MIDDLE_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">SUFFIX</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              CONTACT_NO
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">REGION</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              PROVINCE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              MUNI_CITY
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              BARANGAY
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">SEX</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              BIRTHDATE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              DEFERRAL
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              REASON_FOR_DEFERRAL
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              VACCINATION_DATE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              VACCINE_MANUFACTURER_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              BATCH_NUMBER
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">LOT_NO</div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              BAKUNA_CENTER_CBCR_ID
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              VACCINATOR_NAME
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              1ST_DOSE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              2ND_DOSE
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              Adverse Event
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              Adverse Event Condition
+                            </div>
+                          </td> -->
                         </tr>
                       </tbody>
                     </template>
@@ -1087,11 +1669,22 @@
         depressed
         color="blue"
         dark
-        class="caption text-capitalize"
+        class="mr-2 caption text-capitalize"
         @click="viewVaccinationSummaryDialog(item)"
       >
         <v-icon left> mdi-view-list-outline </v-icon>
         Vaccination Summary
+      </v-btn>
+      <v-btn
+        small
+        depressed
+        color="teal"
+        dark
+        class="caption text-capitalize"
+        @click="viewVasLineDialog(item)"
+      >
+        <v-icon left> mdi-view-list-outline </v-icon>
+        Vas Line Info
       </v-btn>
     </template>
   </v-data-table>
@@ -1099,21 +1692,27 @@
 
 <script>
 import moment from "moment";
-
 import {
   GET_QUALIFIED_PATIENT,
   GET_VACCINATORS,
   GET_VACCINE_CATEGORIES,
   MONITOR_PATIENT,
+  VERIFY_PASSWORD,
+  UPDATE_SUMMARY,
+  VOID_RECORD,
+  GET_VASLINE_INFO,
 } from "../store/transaction";
-
 export default {
   data: () => ({
     e1: 1,
+    message: `A4\tVQSQ0000002921794270\tN\tNO\tAALA\tBERNADETTE\tFLORES\tNA\t09156621977\tREGION IV-A (CALABARZON)\t043400000Laguna\t043404000City of Cabuyao\tBANAYBANAY\tM\t10/26/1986\tN\tNONE\t08/17/2021\tSinovac\tH202107052\tNA\tCBC07625\tLINSAO, MELENOR\tY\tN\tN\tNONE\r\n
+      A4\tVQSQ0000002921794270\tN\tNO\tAALA\tBERNADETTE\tFLORES\tNA\t09156621977\tREGION IV-A (CALABARZON)\t043400000Laguna\t043404000City of Cabuyao\tBANAYBANAY\tM\t10/26/1986\tN\tNONE\t09/14/2021\tSinovac\tJ202108094\tJ202108094\tCBC07625\tBOLIBOL, RENZ MARION\tY\tY\tN\tNONE`,
     search: "",
     monitorPatientDialog: false,
     viewPatientDetailsDialog: false,
     vaccinationSummaryDialog: false,
+    editPatientDetailsDialog: false,
+    vasLineDialog: false,
     headers: [
       {
         text: "Patient Name",
@@ -1153,7 +1752,7 @@ export default {
       carbs: 0,
       protein: 0,
     },
-    dosages: ["1st", "2nd"],
+    dosages: ["1st", "2nd", "3rd(Booster)"],
     vaccineManufacturers: [
       "ASTRAZENECA",
       "MODERNA",
@@ -1192,49 +1791,37 @@ export default {
       question1: false,
       question2: false,
       question3: false,
-
       question4: false,
       question5: false,
-
       question6: false,
       question7: false,
-
       question8: false,
       question8Arr: [],
       question9: [],
-
       question10: false,
       question11: false,
       question12: false,
       question13: false,
       question14: false,
-
       question15: false,
       question16: false,
-
       question17: false,
       question18: [],
       question17Arr: [],
       question19: false,
-
       question_1: false,
       question_2: false,
       question_3: false,
-
       question_4: false,
       question_5: false,
-
       question_6: false,
       question_7: false,
-
       question_8: false,
-
       question_10: false,
       question_11: false,
       question_12: false,
       question_13: false,
       question_14: false,
-
       question_15: false,
       question_16: false,
       question_18: false,
@@ -1459,9 +2046,13 @@ export default {
     isDisabled: false,
     isSearchDisabled: false,
     valid: false,
-    path: "https://cvimsmicro.com/images/",
+    reason_for_update: null,
+    vaccineSummaryEdit: false,
+    vasLine: [],
+    vasLineCopy: "",
+    isCopyCode: false,
+    path: process.env.VUE_APP_STORAGE_END_POINT,
   }),
-
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
@@ -1480,7 +2071,6 @@ export default {
       return 0;
     },
   },
-
   watch: {
     dialog(val) {
       val || this.close();
@@ -1583,7 +2173,6 @@ export default {
           answer.push(this.questionFor8[y].name);
         }
       }
-
       this.monitorPatient.question8Arr = answer.toString();
     },
     getAnswerQuestion17() {
@@ -1593,7 +2182,6 @@ export default {
           answer.push(this.questionFor17[y].name);
         }
       }
-
       this.monitorPatient.question17Arr = answer.toString();
     },
     getAnswerSurvey() {
@@ -1656,6 +2244,9 @@ export default {
       if (this.dosages.length == 1) {
         this.dosages.push("2nd");
       }
+      if (this.dosages.length == 2) {
+        this.dosages.push("3rd(Booster)");
+      }
       // console.log('this.monitorPatient');
       // console.log(this.monitorPatient);
       // console.log('this.monitorPatient');
@@ -1664,7 +2255,6 @@ export default {
       // console.log('this.monitorPatient');
       // console.log(this.monitorPatient);
       // console.log('this.monitorPatient');
-
       this.monitorPatient.qualified_patient_id = item.id;
       this.monitorPatient.vaccination_monitoring = item.vaccination_monitoring;
       this.monitorPatient.patient_name =
@@ -1685,7 +2275,23 @@ export default {
         this.monitorPatient.refusal = null;
         this.monitorPatient.reason_for_refusal = null;
         this.monitorPatient.deferral = null;
+        this.dosages.splice(2, 1);
       } else if (item.vaccination_monitoring.length == 2) {
+        // this.isDisabled = true;
+        this.monitorPatient.dosage = "3rd(Booster)";
+        this.monitorPatient.dose = "3";
+        this.monitorPatient.vaccine_manufacturer = null;
+        this.monitorPatient.vaccine_categories = null;
+        this.monitorPatient.lot_number = null;
+        this.monitorPatient.batch_number = null;
+        this.monitorPatient.consent = null;
+        this.monitorPatient.vaccination_date = null;
+        this.monitorPatient.vaccinator = null;
+        this.monitorPatient.vaccinators = null;
+        this.monitorPatient.refusal = null;
+        this.monitorPatient.reason_for_refusal = null;
+        this.monitorPatient.deferral = null;
+      } else if (item.vaccination_monitoring.length == 3) {
         this.isDisabled = true;
         let vac = item.vaccination_monitoring[0];
         this.monitorPatient.dosage = "1st";
@@ -1714,7 +2320,6 @@ export default {
         ).format("YYYY-MM-DD");
         this.monitorPatient.refusal = vac.reason_for_refusal;
         this.monitorPatient.deferral = vac.deferral;
-
         this.monitorPatient.question1 = this.getAnswer(vac.question_1);
         this.monitorPatient.question2 = this.getAnswer(vac.question_2);
         this.monitorPatient.question3 = this.getAnswer(vac.question_3);
@@ -1738,13 +2343,12 @@ export default {
         this.isDisabled = false;
         this.monitorPatient.dosage = "1st";
         this.monitorPatient.dose = "1";
-        this.dosages.splice(1, 1);
+        this.dosages.splice(1);
       }
     },
     changeDosage() {
       let monitorPatient = this.monitorPatient;
       // this.monitorPatient = {};
-
       this.clearInput();
       // this.monitorPatient.patient_name =
       //   monitorPatient.pre_registration.first_name +
@@ -1754,7 +2358,6 @@ export default {
         if (monitorPatient.vaccination_monitoring[0] != undefined) {
           this.isDisabled = true;
           let vac = monitorPatient.vaccination_monitoring[0];
-
           this.monitorPatient.vaccinators = {
             first_name: vac.first_name,
             health_facilities_id: vac.health_facilities_id,
@@ -1782,7 +2385,6 @@ export default {
           ).format("YYYY-MM-DD");
           this.monitorPatient.reason_for_refusal = vac.reason_for_refusal;
           this.monitorPatient.deferral = vac.deferral;
-
           this.monitorPatient.question1 = this.getAnswer(vac.question_1);
           this.monitorPatient.question2 = this.getAnswer(vac.question_2);
           this.monitorPatient.question3 = this.getAnswer(vac.question_3);
@@ -1846,7 +2448,6 @@ export default {
           ).format("YYYY-MM-DD");
           this.monitorPatient.reason_for_refusal = vac.reason_for_refusal;
           this.monitorPatient.deferral = vac.deferral;
-
           this.monitorPatient.question1 = this.getAnswer(vac.question_1);
           this.monitorPatient.question2 = this.getAnswer(vac.question_2);
           this.monitorPatient.question3 = this.getAnswer(vac.question_3);
@@ -1880,8 +2481,69 @@ export default {
           this.monitorPatient.reason_for_refusal = "";
           this.monitorPatient.deferral = "";
         }
+      } else {
+        if (monitorPatient.vaccination_monitoring[2] != undefined) {
+          this.isDisabled = true;
+          let vac = monitorPatient.vaccination_monitoring[2];
+          this.monitorPatient.vaccinators = {
+            first_name: vac.first_name,
+            health_facilities_id: vac.health_facilities_id,
+            id: vac.vaccinator_id,
+            last_name: vac.last_name,
+            middle_name: vac.middle_name,
+            prc_license_number: vac.prc_license_number,
+            profession: vac.profession,
+            role: vac.role,
+            suffix: vac.suffix,
+          };
+          this.monitorPatient.dose = "3";
+          this.monitorPatient.vaccine_categories = {
+            id: vac.vaccine_category_id,
+            vaccine_manufacturer: vac.vaccine_manufacturer,
+            vaccine_name: vac.vaccine_name,
+          };
+          this.monitorPatient.lot_number = vac.lot_number;
+          this.monitorPatient.batch_number = vac.batch_number;
+          this.monitorPatient.consent = vac.consent;
+          this.monitorPatient.vaccination_date = moment(
+            vac.vaccination_date
+          ).format("YYYY-MM-DD");
+          this.monitorPatient.reason_for_refusal = vac.reason_for_refusal;
+          this.monitorPatient.deferral = vac.deferral;
+          this.monitorPatient.question1 = this.getAnswer(vac.question_1);
+          this.monitorPatient.question2 = this.getAnswer(vac.question_2);
+          this.monitorPatient.question3 = this.getAnswer(vac.question_3);
+          this.monitorPatient.question4 = this.getAnswer(vac.question_4);
+          this.monitorPatient.question5 = this.getAnswer(vac.question_5);
+          this.monitorPatient.question6 = this.getAnswer(vac.question_6);
+          this.monitorPatient.question7 = this.getAnswer(vac.question_7);
+          this.monitorPatient.question8 = this.getAnswer(vac.question_8);
+          this.getAnswer9(vac.question_9);
+          this.monitorPatient.question10 = this.getAnswer(vac.question_10);
+          this.monitorPatient.question11 = this.getAnswer(vac.question_11);
+          this.monitorPatient.question12 = this.getAnswer(vac.question_12);
+          this.monitorPatient.question13 = this.getAnswer(vac.question_13);
+          this.monitorPatient.question14 = this.getAnswer(vac.question_14);
+          this.monitorPatient.question15 = this.getAnswer(vac.question_15);
+          this.monitorPatient.question16 = this.getAnswer(vac.question_16);
+          this.getAnswer17(vac.question_17);
+          this.monitorPatient.question18 = this.getAnswer(vac.question_18);
+          this.monitorPatient.question19 = this.getAnswer(vac.question_19);
+        } else {
+          this.isDisabled = false;
+          this.monitorPatient.vaccinator = "";
+          this.monitorPatient.vaccinators = null;
+          this.monitorPatient.dose = "3";
+          this.monitorPatient.vaccine_categories = null;
+          this.monitorPatient.vaccine_manufacturer = "";
+          this.monitorPatient.lot_number = "";
+          this.monitorPatient.batch_number = "";
+          this.monitorPatient.consent = "";
+          this.monitorPatient.vaccination_date = null;
+          this.monitorPatient.reason_for_refusal = "";
+          this.monitorPatient.deferral = "";
+        }
       }
-
       return this;
     },
     clearInput() {
@@ -1893,7 +2555,6 @@ export default {
       this.monitorPatient.vaccination_date = null;
       this.monitorPatient.reason_for_refusal = "";
       this.monitorPatient.deferral = "";
-
       this.monitorPatient.question1 = false;
       this.monitorPatient.question2 = false;
       this.monitorPatient.question3 = false;
@@ -1902,7 +2563,6 @@ export default {
       this.monitorPatient.question6 = false;
       this.monitorPatient.question7 = false;
       this.monitorPatient.question8 = false;
-
       for (var x = 0; x < this.questionFor8.length; x++) {
         this.questionFor8[x].isChecked = false;
       }
@@ -1926,7 +2586,6 @@ export default {
       } else {
         ans = false;
       }
-
       return ans;
     },
     getAnswer9(answer) {
@@ -1952,7 +2611,6 @@ export default {
           }
         }
       }
-
       return this.questionFor17;
     },
     getAnswerQuestion(answer) {
@@ -1962,7 +2620,6 @@ export default {
       } else {
         ans = "02_No";
       }
-
       return ans;
     },
     editItem(item) {
@@ -1970,18 +2627,15 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-
     deleteItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
-
     deleteItemConfirm() {
       this.desserts.splice(this.editedIndex, 1);
       this.closeDelete();
     },
-
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -1989,7 +2643,6 @@ export default {
         this.editedIndex = -1;
       });
     },
-
     closeDelete() {
       this.dialogDelete = false;
       this.$nextTick(() => {
@@ -1997,7 +2650,6 @@ export default {
         this.editedIndex = -1;
       });
     },
-
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem);
@@ -2006,42 +2658,34 @@ export default {
       }
       this.close();
     },
-
     getColor(status) {
       if (status == 1) return "green";
       else return "red";
     },
-
     validateQuestion1() {
       // console.log(this.monitorPatient.question1);
       // if (!this.monitorPatient.question1) {
       //   this.monitorPatient.question1 = false;
       // }
     },
-
     validateQuestion() {
       if (!this.monitorPatient.question4) {
         this.monitorPatient.question5 = false;
       }
-
       // if (!this.monitorPatient.question6) {
       //   this.monitorPatient.question7 = false;
       // }
-
       if (!this.monitorPatient.question15) {
         this.monitorPatient.question16 = false;
       }
-
       if (!this.monitorPatient.question6) {
         this.monitorPatient.question7 = false;
       }
-
       if (!this.monitorPatient.question16) {
         this.monitorPatient.question17 = [];
         this.monitorPatient.question18 = false;
       }
     },
-
     hidePatientDetails() {
       this.patient = {
         image: "",
@@ -2063,7 +2707,6 @@ export default {
     },
     viewPatientDetails(pat) {
       var patient = pat.pre_registration;
-
       this.answer = [];
       this.viewPatientDetailsDialog = true;
       this.patient = patient;
@@ -2085,13 +2728,17 @@ export default {
       this.vaccinationSummaryDialog = true;
       this.patient.vaccination_summary = pat.vaccination_monitoring;
     },
+    cancelDialog() {
+      this.monitorPatientDialog = false;
+      this.isDisabled = false;
+      this.vaccineSummaryEdit = false;
+    },
     getDataFromApi() {
       this.$emit("changeValue", true);
       this.desserts = [];
       this.loading = true;
       const search_key = this.search;
       const { page, itemsPerPage } = this.options;
-
       this.$store
         .dispatch(GET_QUALIFIED_PATIENT, {
           items_per_page: itemsPerPage,
@@ -2101,27 +2748,27 @@ export default {
         // go to which page after successfully login
         .then((data) => {
           let items = data.data;
-
           // if (itemsPerPage > 0) {
           //   items = items.slice((page - 1) * itemsPerPage, page * itemsPerPage);
           // }
           items = items.filter((item) => {
             return item.pre_registration != null;
           });
-
           items.forEach((item) => {
             item.pre_registration.patient_name =
               item.pre_registration.first_name +
               " " +
               item.pre_registration.middle_name +
               " " +
-              item.pre_registration.last_name + 
-              " " + (item.pre_registration.suffix != "NA" ? item.pre_registration.suffix : "");
+              item.pre_registration.last_name +
+              " " +
+              (item.pre_registration.suffix != "NA"
+                ? item.pre_registration.suffix
+                : "");
           });
           this.desserts = items;
           this.totalDesserts = data.meta.total;
           this.loading = false;
-
           this.$emit("changeValue", false);
           this.isSearchDisabled = false;
         });
@@ -2143,8 +2790,196 @@ export default {
       });
     },
     check() {},
-  },
+    async confirmPassword() {
+      var isConfirm = false;
+      await this.$swal({
+        title: "Confirm Password",
+        // text: "Please confirm your password to continue.",
+        input: "password",
+        inputLabel: "Please confirm your password to continue.",
+        // inputPlaceholder: "Enter your password",
+        confirmButtonText: "Continue",
+        showCancelButton: true,
+        inputAttributes: {
+          autocapitalize: "off",
+          autocorrect: "off",
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          console.log(result.value);
+          await this.$store
+            .dispatch(VERIFY_PASSWORD, { password: result.value })
+            .then((data) => {
+              if (data.success) {
+                console.log("ok");
+                isConfirm = true;
+              } else {
+                this.$swal("Error", "Password Incorrect", "danger");
+                //isConfirm = false;
+              }
+            });
+        }
+      });
 
+      console.log(isConfirm);
+      return isConfirm;
+    },
+    async editPatientDetails(summary) {
+      console.log(summary);
+      this.clearInput();
+      this.vaccinationSummaryDialog = false;
+      if (await this.confirmPassword()) {
+        this.vaccineSummaryEdit = true;
+        this.isDisabled = false;
+        this.monitorPatientDialog = true;
+        if (summary.dosage == "1") {
+          this.monitorPatient.dosage = "1st";
+          this.monitorPatient.dose = "1";
+        } else if (summary.dosage == "2") {
+          this.monitorPatient.dosage = "2nd";
+          this.monitorPatient.dose = "2";
+        } else {
+          this.monitorPatient.dosage = "3rd(Booster)";
+          this.monitorPatient.dose = "3";
+        }
+        this.monitorPatient.id = summary.id;
+        this.monitorPatient.qualified_patient_id = summary.qualified_patient_id;
+        this.monitorPatient.vaccinators = {
+          first_name: summary.first_name,
+          health_facilities_id: summary.health_facilities_id,
+          id: summary.vaccinator_id,
+          last_name: summary.last_name,
+          middle_name: summary.middle_name,
+          prc_license_number: summary.prc_license_number,
+          profession: summary.profession,
+          role: summary.role,
+          suffix: summary.suffix,
+        };
+        this.monitorPatient.vaccine_categories = {
+          id: summary.vaccine_category_id,
+          vaccine_manufacturer: summary.vaccine_manufacturer,
+          vaccine_name: summary.vaccine_name,
+        };
+        this.monitorPatient.lot_number = summary.lot_number;
+        this.monitorPatient.batch_number = summary.batch_number;
+        this.monitorPatient.consent = summary.consent;
+        this.monitorPatient.vaccination_date = moment(
+          summary.vaccination_date
+        ).format("YYYY-MM-DD");
+      }
+    },
+    saveEditSummary() {
+      this.monitorPatient.vaccination_date = moment(
+        this.monitorPatient.vaccination_date
+      ).format("MM/DD/YYYY");
+      let data = this.monitorPatient;
+      data.reason_for_update = this.reason_for_update;
+      console.log(this.monitorPatient);
+
+      this.$swal({
+        title: "Confirm",
+        text: "Are you sure you want to save this?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Confirm",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          console.log(result.value);
+          this.$store.dispatch(UPDATE_SUMMARY, data).then((data) => {
+            if (data.success) {
+              this.$swal(
+                "Update Vaccination Summary",
+                "Successfully updated.",
+                "success"
+              );
+              this.getDataFromApi();
+              this.monitorPatientDialog = false;
+              this.vaccineSummaryEdit = false;
+            } else {
+              this.$swal("Error", "Something went wrong", "danger");
+              this.monitorPatientDialog = false;
+              this.vaccineSummaryEdit = false;
+            }
+          });
+        }
+      });
+    },
+    async voidPatientDetails(summary) {
+      console.log(summary);
+      this.vaccinationSummaryDialog = false;
+      if (await this.confirmPassword()) {
+        this.$swal({
+          icon: "warning",
+          title: "Are you sure?",
+          text: "Do you really want to void this record? You won't be able to revert this.",
+          showCancelButton: true,
+          confirmButtonText: "Confirm",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.$store
+              .dispatch(VOID_RECORD, { id: summary.id })
+              .then((data) => {
+                if (data.success) {
+                  this.$swal({
+                    icon: "success",
+                    title: "Success!",
+                    text: "Record voided successfully.",
+                  });
+                  this.getDataFromApi();
+                } else {
+                  this.$swal("Error", "Something went wrong", "danger");
+                }
+              });
+          }
+        });
+      }
+    },
+    viewVasLineDialog(item) {
+      this.vasLine = [];
+      this.vasLineDialog = true;
+      this.isCopyCode = false;
+      console.log(item);
+      this.$store.dispatch(GET_VASLINE_INFO, { id: item.id }).then((data) => {
+        this.vasLine = data[0];
+        this.vasLineCopy = this.vasLine.join(" ");
+      });
+    },
+    copy() {
+      // let container = this.$refs.container;
+      // var text = "A4\tNA\tVKGE0000025218179077\tN\tNO\nA4\tNA\tVKGE0000025218179077\tN\tNO";
+      // this.$copyText(text, container).then(
+      //   function (e) {
+      //     // alert("Copied");
+      //     console.log(e);
+      //   },
+      //   function (e) {
+      //     // alert("Can not copy");
+      //     console.log(e);
+      //   }
+      // );
+      let testingCodeToCopy = document.querySelector("#testing-code");
+      testingCodeToCopy.setAttribute("type", "text");
+      testingCodeToCopy.select();
+      // try {
+      //   var successful = document.execCommand("copy");
+      //   var msg = successful ? "successful" : "unsuccessful";
+      //   alert("Testing code was copied " + msg);
+      // } catch (err) {
+      //   alert("Oops, unable to copy");
+      // }
+      /* unselect the range */
+      document.execCommand("copy");
+      testingCodeToCopy.setAttribute("type", "hidden");
+      window.getSelection().removeAllRanges();
+
+      this.isCopyCode = true;
+      setTimeout(() => {
+        this.isCopyCode = false;
+      }, 3000);
+    },
+  },
   created() {
     this.getVaccinators();
     this.getVaccineCategories();

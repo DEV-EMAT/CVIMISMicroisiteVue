@@ -16,11 +16,15 @@ export const GET_VACCINATORS = "getVaccinators";
 export const GET_VACCINE_CATEGORIES = "getVaccineCategories";
 export const VERIFY_PATIENT = "verifyPatient";
 export const MONITOR_PATIENT = "monitorPatient";
+export const VERIFY_PASSWORD = "verifyPassword";
+export const UPDATE_SUMMARY = "updateSummary";
+export const VOID_RECORD = "voidRecord";
+export const GET_VASLINE_INFO = "getVasLineInfo";
 
 // mutation types
 
-// instance.defaults.baseURL = "http://192.168.100.190:8080/api";
-instance.defaults.baseURL = "https://cvimsmicro.com/api";
+instance.defaults.baseURL = process.env.VUE_APP_API_END_POINT;
+
 
 const state = {
   token: apiservice.getToken()
@@ -163,6 +167,47 @@ return new Promise(resolve => {
           });
       });
     },
+    [VERIFY_PASSWORD](context, credentials) {
+      return new Promise(resolve => {
+        instance.post("/cabvax/verify-password", credentials, {headers : {'Authorization' : 'Bearer ' + apiservice.getToken()}})
+          .then(({ data }) => {
+            resolve(data);
+          })
+          .catch(() => {
+          });
+      });
+    },
+    [UPDATE_SUMMARY](context, credentials) {
+      return new Promise(resolve => {
+        instance.post("/cabvax/update-summary", credentials, {headers : {'Authorization' : 'Bearer ' + apiservice.getToken()}})
+          .then(({ data }) => {
+            resolve(data);
+          })
+          .catch(() => {
+          });
+      });
+    },
+    [VOID_RECORD](context, credentials) {
+      return new Promise(resolve => {
+        instance.post("/cabvax/void-record", credentials, {headers : {'Authorization' : 'Bearer ' + apiservice.getToken()}})
+          .then(({ data }) => {
+            resolve(data);
+          })
+          .catch(() => {
+          });
+      });
+    },
+    [GET_VASLINE_INFO](context, credentials) {
+      return new Promise(resolve => {
+        instance.post("/cabvax/get-vasline-info", credentials, {headers : {'Authorization' : 'Bearer ' + apiservice.getToken()}})
+          .then(({ data }) => {
+            resolve(data);
+          })
+          .catch(() => {
+          });
+      });
+    },
+
 };
 
 const mutations = {
