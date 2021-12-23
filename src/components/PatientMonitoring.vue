@@ -2128,6 +2128,7 @@ export default {
       this.monitorPatient = item;
     },
     saveMonitorPatient() {
+      console.log("save");
       if (this.validate()) {
         this.getAnswerQuestion8();
         this.getAnswerQuestion17();
@@ -2872,6 +2873,7 @@ export default {
       }
     },
     saveEditSummary() {
+      console.log("edit");
       //console.log(this.vaccineSummaryEdit);
       this.monitorPatient.vaccination_date = moment(
         this.monitorPatient.vaccination_date
