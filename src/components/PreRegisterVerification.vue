@@ -1076,6 +1076,7 @@ export default {
         this.patient.date_of_birth = moment(this.patient.date_of_birth).format(
           "MM/DD/YYYY"
         );
+        this.patient.gurdian_id = 0;
         this.$swal({
           title: "Confirm",
           text: "Are you sure you want to add pre-registration?",
@@ -1106,6 +1107,7 @@ export default {
                 this.$swal("Error", "Something went wrong", "danger");
                 this.addEditdialog = false;
               }
+              this.patient.gurdian_id = null;
             });
           }
         });

@@ -1501,9 +1501,9 @@
                           </th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody v-for="(vasline, i) in vasLine" :key="i">
                         <tr>
-                          <td v-for="(vas, index) in vasLine" :key="index">
+                          <td v-for="(vas, index) in vasline" :key="index">
                             <div class="grey--text text--darken-1">
                               {{ vas }}
                             </div>
@@ -1786,7 +1786,7 @@ export default {
       vaccination_date: "",
       vaccinator: "",
       vaccinators: null,
-      refusal: "",
+      reason_for_refusal: "",
       deferral: "",
       question1: false,
       question2: false,
@@ -2051,6 +2051,7 @@ export default {
     vasLine: [],
     vasLineCopy: "",
     isCopyCode: false,
+    isSaved: false,
     path: process.env.VUE_APP_STORAGE_END_POINT,
   }),
   computed: {
@@ -2240,6 +2241,7 @@ export default {
     editMonitorPatient(item) {
       this.isDisabled = false;
       this.monitorPatientDialog = true;
+      this.vaccineSummaryEdit = false;
       this.clearInput();
       if (this.dosages.length == 1) {
         this.dosages.push("2nd");
@@ -2863,6 +2865,8 @@ export default {
         this.monitorPatient.lot_number = summary.lot_number;
         this.monitorPatient.batch_number = summary.batch_number;
         this.monitorPatient.consent = summary.consent;
+        this.monitorPatient.deferral = summary.deferral;
+        this.monitorPatient.reason_for_refusal = summary.reason_for_refusal;
         this.monitorPatient.vaccination_date = moment(
           summary.vaccination_date
         ).format("YYYY-MM-DD");
@@ -2942,7 +2946,8 @@ export default {
       this.isCopyCode = false;
       console.log(item);
       this.$store.dispatch(GET_VASLINE_INFO, { id: item.id }).then((data) => {
-        this.vasLine = data[0];
+        this.vasLine = data;
+        console.log(this.vasLine);
         this.vasLineCopy = this.vasLine.join(" ");
       });
     },
