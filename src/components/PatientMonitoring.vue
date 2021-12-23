@@ -2807,12 +2807,12 @@ export default {
         },
       }).then(async (result) => {
         if (result.isConfirmed) {
-          console.log(result.value);
+          //console.log(result.value);
           await this.$store
             .dispatch(VERIFY_PASSWORD, { password: result.value })
             .then((data) => {
               if (data.success) {
-                console.log("ok");
+                //console.log("ok");
                 isConfirm = true;
               } else {
                 this.$swal("Error", "Password Incorrect", "danger");
@@ -2822,11 +2822,11 @@ export default {
         }
       });
 
-      console.log(isConfirm);
+      //console.log(isConfirm);
       return isConfirm;
     },
     async editPatientDetails(summary) {
-      console.log(summary);
+      //console.log(summary);
       this.clearInput();
       this.vaccinationSummaryDialog = false;
       if (await this.confirmPassword()) {
@@ -2872,16 +2872,18 @@ export default {
       }
     },
     saveEditSummary() {
+      //console.log(this.vaccineSummaryEdit);
       this.monitorPatient.vaccination_date = moment(
         this.monitorPatient.vaccination_date
       ).format("MM/DD/YYYY");
       let data = this.monitorPatient;
       data.reason_for_update = this.reason_for_update;
-      console.log(this.monitorPatient);
+      //console.log(this.monitorPatient);
+      this.vaccineSummaryEdit = false;
 
       this.$swal({
         title: "Confirm",
-        text: "Are you sure you want to save this?",
+        text: "Are you sure you want to update this?",
         icon: "question",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -2889,7 +2891,7 @@ export default {
         confirmButtonText: "Confirm",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          console.log(result.value);
+          //console.log(result.value);
           this.$store.dispatch(UPDATE_SUMMARY, data).then((data) => {
             if (data.success) {
               this.$swal(
@@ -2899,18 +2901,18 @@ export default {
               );
               this.getDataFromApi();
               this.monitorPatientDialog = false;
-              this.vaccineSummaryEdit = false;
+              //this.vaccineSummaryEdit = false;
             } else {
               this.$swal("Error", "Something went wrong", "danger");
               this.monitorPatientDialog = false;
-              this.vaccineSummaryEdit = false;
+              //this.vaccineSummaryEdit = false;
             }
           });
         }
       });
     },
     async voidPatientDetails(summary) {
-      console.log(summary);
+      //console.log(summary);
       this.vaccinationSummaryDialog = false;
       if (await this.confirmPassword()) {
         this.$swal({
@@ -2943,7 +2945,7 @@ export default {
       this.vasLine = [];
       this.vasLineDialog = true;
       this.isCopyCode = false;
-      console.log(item);
+      //console.log(item);
       this.$store.dispatch(GET_VASLINE_INFO, { id: item.id }).then((data) => {
         this.vasLine = data;
         this.vasLineCopy = this.vasLine.join(" ");
