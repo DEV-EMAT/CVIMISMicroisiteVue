@@ -1786,7 +1786,7 @@ export default {
       vaccination_date: "",
       vaccinator: "",
       vaccinators: null,
-      refusal: "",
+      reason_for_refusal: "",
       deferral: "",
       question1: false,
       question2: false,
@@ -2240,6 +2240,7 @@ export default {
     editMonitorPatient(item) {
       this.isDisabled = false;
       this.monitorPatientDialog = true;
+      this.vaccineSummaryEdit = false;
       this.clearInput();
       if (this.dosages.length == 1) {
         this.dosages.push("2nd");
@@ -2863,6 +2864,8 @@ export default {
         this.monitorPatient.lot_number = summary.lot_number;
         this.monitorPatient.batch_number = summary.batch_number;
         this.monitorPatient.consent = summary.consent;
+        this.monitorPatient.deferral = summary.deferral;
+        this.monitorPatient.reason_for_refusal = summary.reason_for_refusal;
         this.monitorPatient.vaccination_date = moment(
           summary.vaccination_date
         ).format("YYYY-MM-DD");
