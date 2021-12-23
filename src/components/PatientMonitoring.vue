@@ -2051,6 +2051,7 @@ export default {
     vasLine: [],
     vasLineCopy: "",
     isCopyCode: false,
+    isSaved: false,
     path: process.env.VUE_APP_STORAGE_END_POINT,
   }),
   computed: {
@@ -2950,6 +2951,7 @@ export default {
       //console.log(item);
       this.$store.dispatch(GET_VASLINE_INFO, { id: item.id }).then((data) => {
         this.vasLine = data;
+        console.log(this.vasLine);
         this.vasLineCopy = this.vasLine.join(" ");
       });
     },
