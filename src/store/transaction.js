@@ -161,6 +161,7 @@ return new Promise(resolve => {
       return new Promise(resolve => {
         instance.post("/cabvax/monitor-qualified-patient", credentials, {headers : {'Authorization' : 'Bearer ' + apiservice.getToken()}})
           .then(({ data }) => {
+            console.log(data);
             resolve(data);
           })
           .catch(() => {
@@ -178,6 +179,7 @@ return new Promise(resolve => {
       });
     },
     [UPDATE_SUMMARY](context, credentials) {
+      console.log(credentials.vaccine_categories);
       return new Promise(resolve => {
         instance.post("/cabvax/update-summary", credentials, {headers : {'Authorization' : 'Bearer ' + apiservice.getToken()}})
           .then(({ data }) => {

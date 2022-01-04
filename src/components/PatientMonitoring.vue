@@ -2828,7 +2828,8 @@ export default {
       return isConfirm;
     },
     async editPatientDetails(summary) {
-      //console.log(summary);
+      console.log(summary);
+      console.log(summary.vaccination_monitoring_id);
       this.clearInput();
       this.vaccinationSummaryDialog = false;
       if (await this.confirmPassword()) {
@@ -2845,7 +2846,7 @@ export default {
           this.monitorPatient.dosage = "3rd(Booster)";
           this.monitorPatient.dose = "3";
         }
-        this.monitorPatient.id = summary.id;
+        this.monitorPatient.id = summary.vaccination_monitoring_id;
         this.monitorPatient.qualified_patient_id = summary.qualified_patient_id;
         this.monitorPatient.vaccinators = {
           first_name: summary.first_name,
@@ -2876,43 +2877,46 @@ export default {
     saveEditSummary() {
       console.log("edit");
       //console.log(this.vaccineSummaryEdit);
-      this.monitorPatient.vaccination_date = moment(
-        this.monitorPatient.vaccination_date
-      ).format("MM/DD/YYYY");
-      let data = this.monitorPatient;
-      data.reason_for_update = this.reason_for_update;
-      //console.log(this.monitorPatient);
-      this.vaccineSummaryEdit = false;
+      if (this.validate()) {
+        this.monitorPatient.vaccination_date = moment(
+          this.monitorPatient.vaccination_date
+        ).format("MM/DD/YYYY");
+        let data = this.monitorPatient;
+        data.reason_for_update = this.reason_for_update;
+        //console.log(this.monitorPatient);
+        this.vaccineSummaryEdit = false;
+        console.log(data);
 
-      this.$swal({
-        title: "Confirm",
-        text: "Are you sure you want to update this?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Confirm",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          //console.log(result.value);
-          this.$store.dispatch(UPDATE_SUMMARY, data).then((data) => {
-            if (data.success) {
-              this.$swal(
-                "Update Vaccination Summary",
-                "Successfully updated.",
-                "success"
-              );
-              this.getDataFromApi();
-              this.monitorPatientDialog = false;
-              //this.vaccineSummaryEdit = false;
-            } else {
-              this.$swal("Error", "Something went wrong", "danger");
-              this.monitorPatientDialog = false;
-              //this.vaccineSummaryEdit = false;
-            }
-          });
-        }
-      });
+        this.$swal({
+          title: "Confirm",
+          text: "Are you sure you want to update this?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Confirm",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            //console.log(result.value);
+            this.$store.dispatch(UPDATE_SUMMARY, data).then((data) => {
+              if (data.success) {
+                this.$swal(
+                  "Update Vaccination Summary",
+                  "Successfully updated.",
+                  "success"
+                );
+                this.getDataFromApi();
+                this.monitorPatientDialog = false;
+                //this.vaccineSummaryEdit = false;
+              } else {
+                this.$swal("Error", "Something went wrong", "danger");
+                this.monitorPatientDialog = false;
+                //this.vaccineSummaryEdit = false;
+              }
+            });
+          }
+        });
+      }
     },
     async voidPatientDetails(summary) {
       //console.log(summary);
