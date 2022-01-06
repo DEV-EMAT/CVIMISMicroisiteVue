@@ -1424,7 +1424,7 @@ export default {
             if (item.guardians != null) {
               item.gurdian_id = item.guardians.id;
               item.gurdian_lname = item.guardians.last_name;
-              item.gurdian_fname = item.guardians.last_name;
+              item.gurdian_fname = item.guardians.first_name;
               item.gurdian_mname = item.guardians.middle_name;
               item.gurdian_suffix = item.guardians.suffix;
               item.gurdian_contact_number = item.guardians.contact_number;
