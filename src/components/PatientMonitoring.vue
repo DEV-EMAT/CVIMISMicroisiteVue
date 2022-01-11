@@ -947,6 +947,19 @@
                                 text--darken-2
                               "
                             >
+                              Date Encoded
+                            </span>
+                          </th>
+                          <th class="text-left">
+                            <span
+                              class="
+                                v-card__text
+                                pa-0
+                                font-weight-medium
+                                grey--text
+                                text--darken-2
+                              "
+                            >
                               Consent
                             </span>
                           </th>
@@ -1043,6 +1056,11 @@
                           <td>
                             <div class="grey--text text--darken-1">
                               {{ vac_summary.encoded_by }}
+                            </div>
+                          </td>
+                          <td>
+                            <div class="grey--text text--darken-1">
+                              {{ vac_summary.created_at }}
                             </div>
                           </td>
                           <td>
