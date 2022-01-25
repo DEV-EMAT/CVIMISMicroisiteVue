@@ -364,6 +364,96 @@
           </v-card-actions>
         </v-dialog>
         <v-dialog
+          v-model="printDivBooster"
+          transition="dialog-bottom-transition"
+          max-width="700"
+        >
+          <div id="printBooster">
+            <v-card
+              id="printDivBoosterCon"
+              :style="{
+                height: printDivHeight,
+                width: printDivWidth,
+                margin: printDivMargin,
+              }"
+            >
+              <div id="printQrCode">
+                <img
+                  :src="img"
+                  style="margin-bottom: 6px"
+                  :style="{
+                    height: qrcodeHeight,
+                    width: qrcodeWidth,
+                    margin: qrcodeMargin,
+                  }"
+                /><qrcode-vue
+                  :value="value"
+                  :size="size"
+                  level="H"
+                  id="qrCode"
+                />
+              </div>
+              <div
+                id="assessmentNumber"
+                v-html="assessmentNumber"
+                :style="{
+                  margin: assessmentMargin,
+                  fontSize: assessmentFontSize,
+                }"
+              ></div>
+              <div
+                id="printContainer"
+                style="height: 200px; width: 200px"
+              ></div>
+
+              <div class="row">
+                <table
+                  id="printInfo"
+                  v-html="printInfo"
+                  :style="{
+                    margin: printInfoMargin,
+                    fontSize: printInfoFontSize,
+                    width: printInfoWidth,
+                  }"
+                ></table>
+              </div>
+              <div class="row">
+                <table
+                  id="printInfoFirstDose"
+                  v-html="printInfoFirstDose"
+                  :style="{
+                    margin: printInfoFirstDoseMargin,
+                    fontSize: printInfoFirstDoseFontSize,
+                  }"
+                ></table>
+              </div>
+              <div class="row">
+                <table
+                  id="printInfoSecondDose"
+                  v-html="printInfoSecondDose"
+                  :style="{
+                    margin: printInfoSecondDoseMargin,
+                    fontSize: printInfoSecondDoseFontSize,
+                  }"
+                ></table>
+              </div>
+            </v-card>
+          </div>
+          <v-card-actions class="grey lighten-5 py-4">
+            <v-spacer></v-spacer>
+            <v-btn small text @click="printDivBooster = false"> Cancel </v-btn>
+            <v-btn
+              small
+              text
+              color="primary"
+              class="white--text"
+              @click="printBoosterCert"
+            >
+              Print</v-btn
+            >
+          </v-card-actions>
+        </v-dialog>
+        <v-dialog
           v-model="printDialogCert"
           transition="dialog-bottom-transition"
           max-width="700"
@@ -445,6 +535,30 @@
       >
         <v-icon left> mdi-printer </v-icon>
         Print Certificate
+      </v-btn>
+      <v-btn
+        v-if="item.vaccination_monitoring.length < 2"
+        small
+        depressed
+        color="blue"
+        dark
+        class="mr-2 caption text-capitalize my-1"
+        style="opacity: 0.5; cursor: not-allowed;"
+      >
+        <v-icon left> mdi-printer </v-icon>
+        Print Booster
+      </v-btn>
+            <v-btn
+        v-else
+        small
+        depressed
+        color="blue"
+        dark
+        class="mr-2 caption text-capitalize my-1"
+        @click="printBooster(item)"
+      >
+        <v-icon left> mdi-printer </v-icon>
+        Print Booster
       </v-btn>
       <!-- <v-btn
         small
@@ -534,6 +648,8 @@ export default {
     answer: [],
     path: process.env.VUE_APP_STORAGE_END_POINT,
     printDialog: false,
+    printDivBooster: false,
+    printDivMargin: "",
     printDialogCert: false,
     assessmentNumber: null,
     printQrCode: null,
@@ -611,7 +727,6 @@ export default {
     //   this.printDialog = true;
     // },
     showDialog(item) {
-      console.log(item);
       this.printInfoFirstDose = "";
       this.printInfoSecondDose = "";
       this.printDialog = true;
@@ -733,7 +848,11 @@ export default {
             `.</td></tr>`;
         }
         if (item.vaccination_monitoring[1]) {
-          if (item.vaccination_monitoring[1].dosage == "2") {
+          if (
+            item.vaccination_monitoring[1].dosage == "2" &&
+            item.vaccination_monitoring[0].vaccine_manufacturer !=
+              "JOHNSON AND JOHNSON"
+          ) {
             if (
               item.vaccination_monitoring[1].vaccine_manufacturer ==
               "JOHNSON AND JOHNSON"
@@ -758,6 +877,7 @@ export default {
             )
               this.vaccinator +=
                 item.vaccination_monitoring[1].middle_name[0] + "";
+
             this.vaccinationDate = new Date(
               item.vaccination_monitoring[1].vaccination_date
             );
@@ -809,6 +929,9 @@ export default {
 
       await this.$htmlToPaper("print");
     },
+    async printBoosterCert(){
+      await this.$htmlToPaper("printBooster");
+    },
     changeStatus() {
       this.printDialog = true;
     },
@@ -858,7 +981,7 @@ export default {
         `<tr><td class="pdetailsCert">Fullname:</td><td colspan="3">` +
         item.pre_registration.patient_name +
         `</td></tr>
-                        <tr><td class="pdetailsCert">Address:</td><td colspan="3">` +
+                        <tr><td class="pdetailsCert">Address:</td><td colspan="5">` +
         item.pre_registration.home_address +
         `</td></tr>
                         <tr><td class="pdetailsCert">Mobile Number:</td><td>` +
@@ -932,7 +1055,11 @@ export default {
             `.</td></tr>`;
         }
         if (item.vaccination_monitoring[1]) {
-          if (item.vaccination_monitoring[1].dosage == "2") {
+          if (
+            item.vaccination_monitoring[1].dosage == "2" &&
+            item.vaccination_monitoring[0].vaccine_manufacturer !=
+              "JOHNSON AND JOHNSON"
+          ) {
             if (
               item.vaccination_monitoring[1].vaccine_manufacturer ==
               "JOHNSON AND JOHNSON"
@@ -940,7 +1067,7 @@ export default {
               this.vaccine = "J&J";
             } else {
               this.vaccine =
-                item.vaccination_monitoring[0].vaccine_manufacturer;
+                item.vaccination_monitoring[1].vaccine_manufacturer;
             }
             if (item.vaccination_monitoring[1].last_name)
               this.vaccinator = item.vaccination_monitoring[1].last_name;
@@ -1006,6 +1133,325 @@ export default {
       //   this.width='50px';
       // })
     },
+    printBooster(item) {
+      this.printInfo = "";
+      console.log(item);
+      this.printInfoFirstDose = "";
+      this.printInfoSecondDose = "";
+      this.printDivBooster = true;
+      setTimeout(
+        function () {
+          this.printDivBooster = false;
+        }.bind(this),
+        0
+      );
+      this.printDivHeight = "510px";
+      this.printDivWidth = "50%";
+      this.printDivMargin = "-60px 0px 0px 10px";
+      this.qrcodeHeight = "60px";
+      this.qrcodeWidth = "60px";
+      this.qrcodeMargin = "90px 0px 0px 370px";
+      this.assessmentMargin = "-80px 0px 0px -350px";
+      this.assessmentFontSize = "10px";
+      this.printInfoMargin = "-185px 0px 0px 10px";
+      this.printInfoFontSize = "8px";
+      this.printInfoWidth = "475px";
+      this.printInfoFirstDoseMargin = "-115px 0px 0px 60px";
+      this.printInfoFirstDoseFontSize = "8px";
+      this.printInfoSecondDoseMargin = "-75px 0px 0px 60px";
+      this.printInfoSecondDoseFontSize = "8px";
+
+      this.sex = item.pre_registration.sex == "01_MALE" ? "Male" : "Female";
+      // this.date_of_birth = new Date(item.pre_registration.date_of_birth);
+      this.today = new Date();
+      this.birthDate = new Date(item.pre_registration.date_of_birth);
+      this.age = this.today.getFullYear() - this.birthDate.getFullYear();
+      this.temp = this.today.getMonth() - this.birthDate.getMonth();
+      if (
+        this.temp < 0 ||
+        (this.temp === 0 && this.today.getDate() < this.birthDate.getDate())
+      ) {
+        this.age--;
+      }
+
+      this.printDivBooster = true;
+      this.value = item.qrcode;
+      this.assessmentNumber = item.qrcode;
+      this.printInfo =
+        `<tr><td class="pdetailsCert">Fullname:</td><td colspan="3">` +
+        item.pre_registration.patient_name +
+        `</td></tr>
+                        <tr><td class="pdetailsCert">Address:</td><td colspan="5">` +
+        item.pre_registration.home_address +
+        `</td></tr>
+                        <tr><td class="pdetailsCert">Mobile Number:</td><td>` +
+        item.pre_registration.contact_number +
+        `</td><td width="7px"></td>
+                          <td class="pdetailsCert">Age:</td><td>` +
+        this.age +
+        ` years old</td><td width="7px"></td>
+                          <td class="pdetailsCert">Sex:</td><td>` +
+        this.sex +
+        `</td></tr>
+                        <tr><td class="pdetailsCert">PhilHealth Number:</td><td>` +
+        item.pre_registration.philhealth_number +
+        `</td><td width="7px"></td>
+                          <td class="pdetailsCert">Category:</td><td>` +
+        this.getCategoryName(item.pre_registration.category_id) +
+        `</td><td width="7px"></td>
+                          <td class="pdetailsCert">Barangay:</td><td>` +
+        item.pre_registration.barangay +
+        `</td></tr>`;
+
+      if (item.vaccination_monitoring) {
+        //2nd dose or booster of J&J VACCINE
+        if (
+          item.vaccination_monitoring[1].dosage == "2" &&
+          item.vaccination_monitoring[0].dosage == "1" &&
+          item.vaccination_monitoring[0].vaccine_manufacturer ==
+            "JOHNSON AND JOHNSON"
+        ) {
+          if (
+            item.vaccination_monitoring[1].vaccine_manufacturer ==
+            "JOHNSON AND JOHNSON"
+          ) {
+            this.vaccine = "J&J";
+          } else {
+            this.vaccine = item.vaccination_monitoring[1].vaccine_manufacturer;
+          }
+          if (item.vaccination_monitoring[1].last_name)
+            this.vaccinator = item.vaccination_monitoring[1].last_name;
+          if (item.vaccination_monitoring[1].suffix)
+            if (item.vaccination_monitoring[1].suffix != "NA")
+              this.vaccinator += " " + item.vaccination_monitoring[1].suffix;
+          this.vaccinator += ", ";
+          if (item.vaccination_monitoring[1].first_name)
+            this.vaccinator += item.vaccination_monitoring[1].first_name + " ";
+          if (
+            item.vaccination_monitoring[1].middle_name &&
+            item.vaccination_monitoring[1].middle_name != "NA"
+          )
+            this.vaccinator +=
+              item.vaccination_monitoring[1].middle_name[0] + "";
+
+          this.vaccinationDate = new Date(
+            item.vaccination_monitoring[1].vaccination_date
+          );
+          this.printInfoFirstDose =
+            `<tr><td style="width:90px">` +
+            (this.vaccinationDate.getMonth() + 1) +
+            "&emsp;&nbsp;&nbsp;" +
+            this.vaccinationDate.getDate() +
+            "&emsp;&emsp;&nbsp;" +
+            this.vaccinationDate.getFullYear().toString().substr(2, 2) +
+            `</td><td style="width:10px"></td>
+                                        <td style="width:60px">` +
+            this.vaccine +
+            `</td><td style="width:30px"></td>
+                                        <td style="width:60px">` +
+            item.vaccination_monitoring[1].batch_number +
+            `</td><td style="width:30px"></td>
+                                        <td style="width:60px">` +
+            item.vaccination_monitoring[1].lot_number +
+            `</td>
+                                      </tr>
+                                      <tr><td style='height:15px'><br></td></tr>
+                                      <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` +
+            this.vaccinator +
+            `.</td></tr>`;
+          //*end of 2nd dose or booster of J&J VACCINE
+        } else if (item.vaccination_monitoring[2]){
+          if (item.vaccination_monitoring[2].dosage == "3") {
+            if (
+              item.vaccination_monitoring[2].vaccine_manufacturer ==
+              "JOHNSON AND JOHNSON"
+            ) {
+              this.vaccine = "J&J";
+            } else {
+              this.vaccine = item.vaccination_monitoring[2].vaccine_manufacturer;
+            }
+            if (item.vaccination_monitoring[2].last_name)
+              this.vaccinator = item.vaccination_monitoring[2].last_name;
+            if (item.vaccination_monitoring[2].suffix)
+              if (item.vaccination_monitoring[2].suffix != "NA")
+                this.vaccinator += " " + item.vaccination_monitoring[2].suffix;
+            this.vaccinator += ", ";
+            if (item.vaccination_monitoring[2].first_name)
+              this.vaccinator += item.vaccination_monitoring[2].first_name + " ";
+            if (
+              item.vaccination_monitoring[2].middle_name &&
+              item.vaccination_monitoring[2].middle_name != "NA"
+            )
+              this.vaccinator +=
+                item.vaccination_monitoring[2].middle_name[0] + "";
+
+            this.vaccinationDate = new Date(
+              item.vaccination_monitoring[2].vaccination_date
+            );
+            this.printInfoFirstDose =
+              `<tr><td style="width:90px">` +
+              (this.vaccinationDate.getMonth() + 1) +
+              "&emsp;&nbsp;&nbsp;" +
+              this.vaccinationDate.getDate() +
+              "&emsp;&emsp;&nbsp;" +
+              this.vaccinationDate.getFullYear().toString().substr(2, 2) +
+              `</td><td style="width:10px"></td>
+                                          <td style="width:60px">` +
+              this.vaccine +
+              `</td><td style="width:30px"></td>
+                                          <td style="width:60px">` +
+              item.vaccination_monitoring[2].batch_number +
+              `</td><td style="width:30px"></td>
+                                          <td style="width:60px">` +
+              item.vaccination_monitoring[2].lot_number +
+              `</td>
+                                        </tr>
+                                        <tr><td style='height:15px'><br></td></tr>
+                                        <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` +
+              this.vaccinator +
+              `.</td></tr>`;
+          }
+        }
+
+        //3rd dose or booster of J&J VACCINE
+        if (item.vaccination_monitoring[2]) {
+          if (
+            item.vaccination_monitoring[2].dosage == "3" &&
+            item.vaccination_monitoring[0].dosage == "1" &&
+            item.vaccination_monitoring[0].vaccine_manufacturer ==
+              "JOHNSON AND JOHNSON"
+          ) {
+            if (
+              item.vaccination_monitoring[2].vaccine_manufacturer ==
+              "JOHNSON AND JOHNSON"
+            ) {
+              this.vaccine = "J&J";
+            } else {
+              this.vaccine =
+                item.vaccination_monitoring[2].vaccine_manufacturer;
+            }
+            if (item.vaccination_monitoring[2].last_name)
+              this.vaccinator = item.vaccination_monitoring[2].last_name;
+            if (item.vaccination_monitoring[2].suffix)
+              if (item.vaccination_monitoring[2].suffix != "NA")
+                this.vaccinator += " " + item.vaccination_monitoring[2].suffix;
+            this.vaccinator += ", ";
+            if (item.vaccination_monitoring[2].first_name)
+              this.vaccinator +=
+                item.vaccination_monitoring[2].first_name + " ";
+            if (
+              item.vaccination_monitoring[2].middle_name &&
+              item.vaccination_monitoring[2].middle_name != "NA"
+            )
+              this.vaccinator +=
+                item.vaccination_monitoring[2].middle_name[0] + "";
+
+            this.vaccinationDate = new Date(
+              item.vaccination_monitoring[2].vaccination_date
+            );
+            this.printInfoFirstDose =
+              `<tr><td style="width:90px">` +
+              (this.vaccinationDate.getMonth() + 1) +
+              "&emsp;&nbsp;&nbsp;" +
+              this.vaccinationDate.getDate() +
+              "&emsp;&emsp;&nbsp;" +
+              this.vaccinationDate.getFullYear().toString().substr(2, 2) +
+              `</td><td style="width:10px"></td>
+                                          <td style="width:60px">` +
+              this.vaccine +
+              `</td><td style="width:30px"></td>
+                                          <td style="width:60px">` +
+              item.vaccination_monitoring[2].batch_number +
+              `</td><td style="width:30px"></td>
+                                          <td style="width:60px">` +
+              item.vaccination_monitoring[2].lot_number +
+              `</td>
+                                        </tr>
+                                        <tr><td style='height:15px'><br></td></tr>
+                                        <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` +
+              this.vaccinator +
+              `.</td></tr>`;
+            //*end of 3rd dose or booster of J&J VACCINE
+          }
+        } else {
+          if (item.vaccination_monitoring[2]) {
+            if (item.vaccination_monitoring[2].dosage == "2") {
+              if (
+                item.vaccination_monitoring[2].vaccine_manufacturer ==
+                "JOHNSON AND JOHNSON"
+              ) {
+                this.vaccine = "J&J";
+              } else {
+                this.vaccine =
+                  item.vaccination_monitoring[2].vaccine_manufacturer;
+              }
+              if (item.vaccination_monitoring[2].last_name)
+                this.vaccinator = item.vaccination_monitoring[2].last_name;
+              if (item.vaccination_monitoring[2].suffix)
+                if (item.vaccination_monitoring[2].suffix != "NA")
+                  this.vaccinator +=
+                    " " + item.vaccination_monitoring[2].suffix;
+              this.vaccinator += ", ";
+              if (item.vaccination_monitoring[2].first_name)
+                this.vaccinator +=
+                  item.vaccination_monitoring[2].first_name + " ";
+              if (
+                item.vaccination_monitoring[2].middle_name &&
+                item.vaccination_monitoring[2].middle_name != "NA"
+              )
+                this.vaccinator +=
+                  item.vaccination_monitoring[2].middle_name[0] + "";
+
+              this.vaccinationDate = new Date(
+                item.vaccination_monitoring[2].vaccination_date
+              );
+              this.printInfoSecondDose =
+                `<tr><td style="width:90px">` +
+                (this.vaccinationDate.getMonth() + 1) +
+                "&emsp;&nbsp;&nbsp;" +
+                this.vaccinationDate.getDate() +
+                "&emsp;&emsp;&nbsp;" +
+                this.vaccinationDate.getFullYear().toString().substr(2, 2) +
+                `</td><td style="width:10px"></td>
+                                            <td style="width:60px">` +
+                this.vaccine +
+                `</td><td style="width:30px"></td>
+                                            <td style="width:60px">` +
+                item.vaccination_monitoring[2].batch_number +
+                `</td><td style="width:30px"></td>
+                                            <td style="width:60px">` +
+                item.vaccination_monitoring[2].lot_number +
+                `</td>
+                                          </tr>
+                                          <tr><td style='height:15px'><br></td></tr>
+                                          <tr><td style="text-align:left;" colspan="4">&emsp;&emsp;&emsp;` +
+                this.vaccinator +
+                `.</td></tr>`;
+            }
+          }
+        }
+      }
+
+      setTimeout(
+        function () {
+          functionOutsideVue(this);
+        }.bind(this),
+        100
+      );
+
+      setTimeout(
+        function () {
+          this.printBoosterCert();
+          this.printDivBooster = false;
+          this.printDialog = false;
+          this.printDialogCert = false;
+        }.bind(this),
+        500
+      );
+      // changeWidth(function () {
+      //   this.width='50px';
+      // })
+    },
     printConsentForm(item) {
       console.log(item);
     },
@@ -1060,8 +1506,11 @@ export default {
               " " +
               item.pre_registration.middle_name +
               " " +
-              item.pre_registration.last_name + 
-              " " + (item.pre_registration.suffix != "NA" ? item.pre_registration.suffix : "");
+              item.pre_registration.last_name +
+              " " +
+              (item.pre_registration.suffix != "NA"
+                ? item.pre_registration.suffix
+                : "");
           });
           this.totalDesserts = data.meta.total;
           this.loading = false;
@@ -1124,6 +1573,28 @@ function functionOutsideVue(vue) {
   background-repeat: no-repeat !important;
   overflow: visible;
 }
+
+#printDivBoosterCon {
+  background-color: red;
+  /* width:96%;
+        height:1500px; */
+  width: 68%;
+  height: 1020px;
+  /* margin-top:-420px; */
+  /* margin-top: -290px; */
+  margin-left: 16px;
+  font-family: "Arial", Times, serif;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-position: center left !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  overflow: visible;
+}
+
 #printQrCode {
   margin-top: 330px;
   margin-left: 400px;
