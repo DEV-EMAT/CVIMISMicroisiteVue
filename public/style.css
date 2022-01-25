@@ -22,6 +22,20 @@
     overflow: visible;
     position: relative;
   }
+
+  #printDivBoosterCon {
+    margin-left: 16px;
+    font-family: "Arial", Times, serif;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-position: center left !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    overflow: visible;
+  }
   
   #assessmentNumber {
     /* margin-top: -65px;

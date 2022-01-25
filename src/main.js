@@ -25,8 +25,8 @@ const options = {
   styles: [
     'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
     'https://unpkg.com/kidlat-css/css/kidlat.css',
-    'https://d91s4w14f0ql9.cloudfront.net/vaccine-assessment.css',
-    'https://d91s4w14f0ql9.cloudfront.net/style.css'
+    'http://192.168.100.190:8081/vaccine-assessment.css',
+    'http://192.168.100.190:8081/style.css'
   ],
   timeout: 1000, // default timeout before the print window appears
   autoClose: true, // if false, the window will not close after printing
