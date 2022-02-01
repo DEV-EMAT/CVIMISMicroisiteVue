@@ -18,7 +18,8 @@
                 src="/images/GOCABVax2.png"
                 max-height="380"
                 max-width="350"
-                contain class="mx-auto mb-10"
+                contain
+                class="mx-auto mb-10"
               ></v-img>
               <h6 class="font-weight-regular text-center text-body-2">
                 © 2021
@@ -227,14 +228,16 @@ export default {
           .dispatch(LOGIN, { username, password })
           // go to which page after successfully login
           .then((data) => {
-            
-            if(data.status == 200){
+            if (data.status == 200) {
               this.isLoading = false;
-               this.$router.push({ name: "dashboard" });
-            }else{
+              var now = new Date().getTime();
+              localStorage.setItem("setupTime", now);
+              this.$router.push({ name: "dashboard" });
+            } else {
               this.isLoading = false;
             }
-          }).catch(() => {
+          })
+          .catch(() => {
             this.isLoading = false;
           });
       }

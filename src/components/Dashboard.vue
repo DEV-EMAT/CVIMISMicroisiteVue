@@ -24,7 +24,7 @@
         </v-list-item>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-
+        <p class="text-caption ma-3">{{ user.first_name + " " + user.last_name }}</p>
       <v-btn icon @click="logout">
         <v-icon>mdi-logout-variant</v-icon>
       </v-btn>
@@ -109,7 +109,8 @@ export default {
         component: "PreRegisterVerification",
       },
     ],
-    overlay: true
+    overlay: true,
+    user: null,
   }),
   methods: {
     logout() {
@@ -138,6 +139,9 @@ export default {
       this.overlay = value;
     }
   },
+  mounted(){
+    this.user = JSON.parse(window.localStorage.getItem("user_details"));
+  }
 };
 </script>
 
