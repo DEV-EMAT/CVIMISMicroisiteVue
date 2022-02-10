@@ -143,7 +143,7 @@
                     @click:append="isPassword = !isPassword"
                   ></v-text-field>
                 </v-card-text>
-                <div v-if="errors" color="red">
+                <div v-if="errors" style="color: red;">
                   {{ errors.message }}
                 </div>
                 <v-card-actions>

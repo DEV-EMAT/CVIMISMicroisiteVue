@@ -24,10 +24,85 @@
         </v-list-item>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-        <p class="text-caption ma-3">{{ user.first_name + " " + user.last_name }}</p>
-      <v-btn icon @click="logout">
-        <v-icon>mdi-logout-variant</v-icon>
-      </v-btn>
+      <v-dialog v-model="password" persistent max-width="600px">
+        <v-card>
+          <v-card-title class="text-h5"> Change Password </v-card-title>
+          <v-card-subtitle>
+            <small>*indicates required field</small>
+          </v-card-subtitle>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" v-model="valid" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                      ref="currentpassword"
+                      v-model="currentPassword"
+                      :rules="[rules.required, rules.min]"
+                      label="Current Password*"
+                      :append-icon="showcurrent ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="showcurrent = !showcurrent"
+                      :type="showcurrent ? 'text' : 'password'"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      ref="newpassword"
+                      v-model="newPassword"
+                      :rules="[rules.required, rules.min]"
+                      label="New Password*"
+                      :append-icon="shownew ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="shownew = !shownew"
+                      :type="shownew ? 'text' : 'password'"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      ref="confirmpassword"
+                      v-model="confirmPassword"
+                      :rules="[
+                        rules.required,
+                        rules.min,
+                        (value) =>
+                          value == newPassword ||
+                          'The password confirmation does not match.',
+                      ]"
+                      label="Confirm Password*"
+                      :append-icon="showconfirm ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="showconfirm = !showconfirm"
+                      :type="showconfirm ? 'text' : 'password'"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click="password = false"> Close </v-btn>
+            <v-btn color="primary" text @click="changePassword"> Save </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-menu open-on-hover offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="text-capitalize" text v-bind="attrs" v-on="on">
+            {{ user.first_name + " " + user.last_name }}
+            <v-icon class="ml-3" right size="23.5">mdi-cog-outline</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item link @click="password = true">
+            <v-list-item-title>Change Password</v-list-item-title>
+          </v-list-item>
+          <v-list-item link @click="logout">
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
       <v-tabs
         slot="extension"
@@ -83,7 +158,7 @@ import PatientMonitoring from "./PatientMonitoring.vue";
 import PreRegisterVerification from "./PreRegisterVerification.vue";
 import VaccinationCard from "./VaccinationCard.vue";
 
-import { LOGOUT } from "../store/auth";
+import { LOGOUT, CHANGE_PASSWORD } from "../store/auth";
 
 export default {
   name: "Dashboard",
@@ -111,6 +186,19 @@ export default {
     ],
     overlay: true,
     user: null,
+    password: false,
+    currentPassword: null,
+    newPassword: null,
+    confirmPassword: null,
+    rules: {
+      required: (value) => !!value || "Required.",
+      min: (value) => value.length >= 6 || "Min 6 characters",
+      // min: (v) => (v && v.length >= 8) || "Min 6 characters",
+    },
+    valid: false,
+    shownew: false,
+    showcurrent: false,
+    showconfirm: false,
   }),
   methods: {
     logout() {
@@ -135,13 +223,83 @@ export default {
         }
       });
     },
-    changeValue(value){
+    changeValue(value) {
       this.overlay = value;
-    }
+    },
+    validate() {
+      return this.$refs.form.validate();
+    },
+    changePassword() {
+      if (this.validate()) {
+        // this.isDisabled = true;
+        const old_password = this.currentPassword;
+        const password = this.newPassword;
+        const confirm_password = this.confirmPassword;
+
+        this.$swal({
+          title: "Confirm",
+          text: "Are you sure you want to save this?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Confirm",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.$store
+              .dispatch(CHANGE_PASSWORD, {
+                old_password,
+                password,
+                confirm_password,
+              })
+              // go to which page after successfully login
+              .then((data) => {
+                if (data.status == 200) {
+                  this.password = false;
+                  this.clearInput();
+                  this.$store.dispatch(LOGOUT).then(() => {
+                    this.$router.push({ name: "login" });
+                  });
+                  this.$swal(
+                    "Change Password",
+                    "ChangePassword successfully.",
+                    "success"
+                  );
+                } else if (data.status == 404) {
+                  this.password = false;
+                  this.clearInput();
+                  this.$swal(
+                    "Change Password",
+                    "Incorrect Password",
+                    "warning"
+                  );
+                } else {
+                  this.password = false;
+                  this.clearInput();
+                  this.$swal(
+                    "Change Password",
+                    "Something went wrong",
+                    "error"
+                  );
+                }
+              })
+              .catch(() => {
+                this.password = false;
+                this.clearInput();
+              });
+          }
+        });
+      }
+    },
+    clearInput() {
+      this.currentPassword = "";
+      this.newPassword = "";
+      this.confirmPassword = "";
+    },
   },
-  mounted(){
+  mounted() {
     this.user = JSON.parse(window.localStorage.getItem("user_details"));
-  }
+  },
 };
 </script>
 

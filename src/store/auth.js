@@ -6,6 +6,7 @@ const instance = axios.create();
 export const VERIFY_AUTH = "verifyAuth";
 export const LOGIN = "login";
 export const LOGOUT = "logout";
+export const CHANGE_PASSWORD = "changePassword";
 
 // mutation types
 export const PURGE_AUTH = "logOut";
@@ -64,6 +65,18 @@ const actions = {
     } else {
       context.commit(PURGE_AUTH);
     }
+  },
+  [CHANGE_PASSWORD](context, credentials) {
+    return new Promise(resolve => {
+      instance.post("/user/changepassword", credentials, {headers : {'Authorization' : 'Bearer ' + apiservice.getToken()}})
+        .then(({ data }) => {
+          resolve(data);
+        })
+        .catch(({ response }) => {
+          context.commit(SET_ERROR, response.data);
+          resolve(response);
+        });
+    });
   },
   //  [BRANCH](context, credentials) {
   //   return new Promise(resolve => {
