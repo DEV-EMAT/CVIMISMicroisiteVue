@@ -1528,6 +1528,7 @@ export default {
           this.desserts = items;
           this.totalDesserts = data.meta.total;
           this.loading = false;
+          this.isSearchDisabled = false;
           this.$emit("changeValue", false);
         });
     },
