@@ -53,7 +53,7 @@
         <v-toolbar-title>
           <h5>Vaccination Card</h5>
           <p class="caption">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+            Printing Vaccination Card
           </p>
         </v-toolbar-title>
         <v-spacer></v-spacer>
@@ -64,6 +64,8 @@
           single-line
           hide-details
           @keyup.enter="searchData"
+          placeholder="Firstname Lastname"
+          :disabled="isSearchDisabled"
         ></v-text-field>
 
         <!-- # Dialog for View Patient Information and Registration Verification # -->
@@ -543,12 +545,12 @@
         color="blue"
         dark
         class="mr-2 caption text-capitalize my-1"
-        style="opacity: 0.5; cursor: not-allowed;"
+        style="opacity: 0.5; cursor: not-allowed"
       >
         <v-icon left> mdi-printer </v-icon>
         Print Booster
       </v-btn>
-            <v-btn
+      <v-btn
         v-else
         small
         depressed
@@ -929,7 +931,7 @@ export default {
 
       await this.$htmlToPaper("print");
     },
-    async printBoosterCert(){
+    async printBoosterCert() {
       await this.$htmlToPaper("printBooster");
     },
     changeStatus() {
@@ -1260,7 +1262,7 @@ export default {
             this.vaccinator +
             `.</td></tr>`;
           //*end of 2nd dose or booster of J&J VACCINE
-        } else if (item.vaccination_monitoring[2]){
+        } else if (item.vaccination_monitoring[2]) {
           if (item.vaccination_monitoring[2].dosage == "3") {
             if (
               item.vaccination_monitoring[2].vaccine_manufacturer ==
@@ -1268,7 +1270,8 @@ export default {
             ) {
               this.vaccine = "J&J";
             } else {
-              this.vaccine = item.vaccination_monitoring[2].vaccine_manufacturer;
+              this.vaccine =
+                item.vaccination_monitoring[2].vaccine_manufacturer;
             }
             if (item.vaccination_monitoring[2].last_name)
               this.vaccinator = item.vaccination_monitoring[2].last_name;
@@ -1277,7 +1280,8 @@ export default {
                 this.vaccinator += " " + item.vaccination_monitoring[2].suffix;
             this.vaccinator += ", ";
             if (item.vaccination_monitoring[2].first_name)
-              this.vaccinator += item.vaccination_monitoring[2].first_name + " ";
+              this.vaccinator +=
+                item.vaccination_monitoring[2].first_name + " ";
             if (
               item.vaccination_monitoring[2].middle_name &&
               item.vaccination_monitoring[2].middle_name != "NA"
@@ -1499,8 +1503,11 @@ export default {
           //   items = items.slice((page - 1) * itemsPerPage, page * itemsPerPage);
           // }
 
-          this.desserts = items;
-          this.desserts.forEach((item) => {
+          // this.desserts = items;
+          items = items.filter((item) => {
+            return item.pre_registration != null;
+          });
+          items.forEach((item) => {
             item.pre_registration.patient_name =
               item.pre_registration.first_name +
               " " +
@@ -1511,13 +1518,152 @@ export default {
               (item.pre_registration.suffix != "NA"
                 ? item.pre_registration.suffix
                 : "");
+
+            if (item.vaccination_monitoring.length > 0) {
+              item.vaccination_monitoring = this.getVaccinationMonitoring(
+                item.vaccination_monitoring
+              );
+            }
           });
+          this.desserts = items;
           this.totalDesserts = data.meta.total;
           this.loading = false;
           this.$emit("changeValue", false);
         });
     },
+    getVaccinationMonitoring(vac_mon) {
+      var arrLength = vac_mon.length;
+      var dosageLength = vac_mon[arrLength - 1]["dosage"];
+      var vaccine_mon = [];
+      var isFound = false;
+
+      if (arrLength != dosageLength) {
+        for (var x = 0; x < dosageLength; x++) {
+          for (var y = 0; y < arrLength; y++) {
+            if (x + 1 == vac_mon[y]["dosage"]) {
+              vaccine_mon.push({
+                address: vac_mon[y]["address"],
+                assessment_status: vac_mon[y]["assessment_status"],
+                batch_number: vac_mon[y]["batch_number"],
+                consent: vac_mon[y]["consent"],
+                created_at: vac_mon[y]["created_at"],
+                deferral: vac_mon[y]["deferral"],
+                dosage: vac_mon[y]["dosage"],
+                encoded_by: vac_mon[y]["encoded_by"],
+                facility_name: vac_mon[y]["facility_name"],
+                first_name: vac_mon[y]["first_name"],
+                health_facilities_id: vac_mon[y]["health_facilities_id"],
+                id: vac_mon[y]["id"],
+                last_name: vac_mon[y]["last_name"],
+                lot_number: vac_mon[y]["lot_number"],
+                middle_name: vac_mon[y]["middle_name"],
+                prc_license_number: vac_mon[y]["prc_license_number"],
+                profession: vac_mon[y]["profession"],
+                qualified_patient_id: vac_mon[y]["qualified_patient_id"],
+                question_1: vac_mon[y]["question_1"],
+                question_2: vac_mon[y]["question_2"],
+                question_3: vac_mon[y]["question_3"],
+                question_4: vac_mon[y]["question_4"],
+                question_5: vac_mon[y]["question_5"],
+                question_6: vac_mon[y]["question_6"],
+                question_7: vac_mon[y]["question_7"],
+                question_8: vac_mon[y]["question_8"],
+                question_9: vac_mon[y]["question_9"],
+                question_10: vac_mon[y]["question_10"],
+                question_11: vac_mon[y]["question_11"],
+                question_12: vac_mon[y]["question_12"],
+                question_13: vac_mon[y]["question_13"],
+                question_14: vac_mon[y]["question_14"],
+                question_15: vac_mon[y]["question_15"],
+                question_16: vac_mon[y]["question_16"],
+                question_17: vac_mon[y]["question_17"],
+                question_18: vac_mon[y]["question_18"],
+                question_19: vac_mon[y]["question_19"],
+                reason_for_refusal: vac_mon[y]["reason_for_refusal"],
+                reason_for_update: vac_mon[y]["reason_for_update"],
+                role: vac_mon[y]["role"],
+                status: vac_mon[y]["status"],
+                suffix: vac_mon[y]["suffix"],
+                vaccination_date: vac_mon[y]["vaccination_date"],
+                vaccination_monitoring_id:
+                  vac_mon[y]["vaccination_monitoring_id"],
+                vaccinator_id: vac_mon[y]["vaccinator_id"],
+                vaccine_category_id: vac_mon[y]["vaccine_category_id"],
+                vaccine_manufacturer: vac_mon[y]["vaccine_manufacturer"],
+                vaccine_name: vac_mon[y]["vaccine_name"],
+                verified_by: vac_mon[y]["verified_by"],
+              });
+              isFound = false;
+
+              break;
+            } else {
+              isFound = true;
+            }
+          }
+
+          if (isFound) {
+            vaccine_mon.push({
+              address: null,
+              assessment_status: null,
+              batch_number: null,
+              consent: null,
+              created_at: null,
+              deferral: null,
+              dosage: null,
+              encoded_by: null,
+              facility_name: null,
+              first_name: null,
+              health_facilities_id: null,
+              id: null,
+              last_name: null,
+              lot_number: null,
+              middle_name: null,
+              prc_license_number: null,
+              profession: null,
+              qualified_patient_id: null,
+              question_1: null,
+              question_2: null,
+              question_3: null,
+              question_4: null,
+              question_5: null,
+              question_6: null,
+              question_7: null,
+              question_8: null,
+              question_9: null,
+              question_10: null,
+              question_11: null,
+              question_12: null,
+              question_13: null,
+              question_14: null,
+              question_15: null,
+              question_16: null,
+              question_17: null,
+              question_18: null,
+              question_19: null,
+              reason_for_refusal: null,
+              reason_for_update: null,
+              role: null,
+              status: null,
+              suffix: null,
+              vaccination_date: null,
+              vaccination_monitoring_id: null,
+              vaccinator_id: null,
+              vaccine_category_id: null,
+              vaccine_manufacturer: null,
+              vaccine_name: null,
+              verified_by: null,
+            });
+          }
+        }
+      } else {
+        vaccine_mon = vac_mon;
+      }
+
+      return vaccine_mon;
+    },
     searchData() {
+       this.isSearchDisabled = true;
+       this.options.page = 1;
       console.log(this.search);
       this.getDataFromApi();
     },

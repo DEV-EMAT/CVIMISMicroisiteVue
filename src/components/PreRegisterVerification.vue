@@ -101,7 +101,7 @@
                       }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="white--text font-weight-light">
-                      please make sure all required fields are complete.dfsfdsf
+                      please make sure all required fields are complete.
                     </v-list-item-subtitle>
                   </v-list-item-content>
 
