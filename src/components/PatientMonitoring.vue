@@ -2453,6 +2453,10 @@ export default {
         item.pre_registration.first_name +
         " " +
         item.pre_registration.last_name;
+      this.monitorPatient.consent = "YES";
+      this.monitorPatient.refusal = "NA";
+      this.monitorPatient.reason_for_refusal = "NA";
+      this.monitorPatient.deferral = "NA";
       if (item.vaccination_monitoring.length == 1) {
         this.monitorPatient.dosage = "2nd";
         this.monitorPatient.dose = "2";
@@ -2460,13 +2464,9 @@ export default {
         this.monitorPatient.vaccine_categories = null;
         this.monitorPatient.lot_number = null;
         this.monitorPatient.batch_number = null;
-        this.monitorPatient.consent = null;
         this.monitorPatient.vaccination_date = null;
         this.monitorPatient.vaccinator = null;
         this.monitorPatient.vaccinators = null;
-        this.monitorPatient.refusal = null;
-        this.monitorPatient.reason_for_refusal = null;
-        this.monitorPatient.deferral = null;
         this.dosages.splice(2, 1);
       } else if (item.vaccination_monitoring.length >= 2) {
         //this.isDisabled = true;
@@ -2476,13 +2476,9 @@ export default {
         this.monitorPatient.vaccine_categories = null;
         this.monitorPatient.lot_number = null;
         this.monitorPatient.batch_number = null;
-        this.monitorPatient.consent = null;
         this.monitorPatient.vaccination_date = null;
         this.monitorPatient.vaccinator = null;
         this.monitorPatient.vaccinators = null;
-        this.monitorPatient.refusal = null;
-        this.monitorPatient.reason_for_refusal = null;
-        this.monitorPatient.deferral = null;
 
         // if (item.vaccination_monitoring.length == 2) {
         //   this.boosters.push("1st");

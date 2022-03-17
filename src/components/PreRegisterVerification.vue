@@ -1062,6 +1062,39 @@ export default {
     },
     addNew() {
       this.patient = {};
+      this.patient.categories = {
+        category_format: "06_Other",
+        category_name: " Other",
+        id: 6,
+        status: "1",
+      };
+
+      this.patient.id_categories = {
+        id: 5,
+        id_category_code: "04_Other_ID",
+        id_category_name: "Other ID",
+        status: "1",
+      };
+
+      this.patient.category_id_number = "NA";
+      this.patient.philhealth_number = "NA";
+      this.patient.employee_status = {
+        employment_type: "Others",
+        employment_type_format: "05_Others",
+        id: 5,
+        status: "1",
+      };
+      this.patient.profession = {
+        id: 19,
+        profession_format: "19_Others_",
+        profession_name: "Other",
+        status: "1",
+      };
+      this.patient.specific_profession = "NA";
+      this.patient.employer_name = "NA";
+      this.patient.employer_contact = "NA";
+      this.patient.employer_address = "NA";
+
       this.addEditdialog = true;
       this.editPatient = false;
     },
