@@ -146,6 +146,16 @@
         </div>
       </v-col>
     </v-footer>
+
+    <v-snackbar v-model="snackbar" top right color="blue-grey">
+      Printing of Vaccination Card for Booster Shot is now available!.
+
+      <!-- <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template> -->
+    </v-snackbar>
     <!-- <v-overlay :value="overlay">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay> -->
@@ -199,6 +209,7 @@ export default {
     shownew: false,
     showcurrent: false,
     showconfirm: false,
+    snackbar: false
   }),
   methods: {
     logout() {
@@ -299,6 +310,7 @@ export default {
   },
   mounted() {
     this.user = JSON.parse(window.localStorage.getItem("user_details"));
+    this.snackbar = true;
   },
 };
 </script>
