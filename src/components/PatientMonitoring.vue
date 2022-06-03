@@ -2777,6 +2777,83 @@ export default {
       // }
       return this;
     },
+    changeBooster() {
+      console.log(this.monitorPatient.booster);
+      let monitorPatient = this.monitorPatient;
+      // this.monitorPatient = {};
+      this.clearInput();
+
+      let vac =
+        monitorPatient.vaccination_monitoring[
+          Number(monitorPatient.booster.id) + 1
+        ];
+      console.log(vac);
+
+      if (vac != undefined) {
+        this.isDisabled = true;
+        this.monitorPatient.vaccinators = {
+          first_name: vac.first_name,
+          health_facilities_id: vac.health_facilities_id,
+          id: vac.vaccinator_id,
+          last_name: vac.last_name,
+          middle_name: vac.middle_name,
+          prc_license_number: vac.prc_license_number,
+          profession: vac.profession,
+          role: vac.role,
+          suffix: vac.suffix,
+        };
+        this.monitorPatient.dosage = "3rd(Booster)";
+        this.monitorPatient.dose = (monitorPatient.booster.id + 2).toString();
+        this.monitorPatient.vaccine_categories = {
+          id: vac.vaccine_category_id,
+          vaccine_manufacturer: vac.vaccine_manufacturer,
+          vaccine_name: vac.vaccine_name,
+        };
+        this.monitorPatient.lot_number = vac.lot_number;
+        this.monitorPatient.batch_number = vac.batch_number;
+        this.monitorPatient.consent = vac.consent;
+        this.monitorPatient.vaccination_date = moment(
+          vac.vaccination_date
+        ).format("YYYY-MM-DD");
+        this.monitorPatient.reason_for_refusal = vac.reason_for_refusal;
+        this.monitorPatient.deferral = vac.deferral;
+        this.monitorPatient.question1 = this.getAnswer(vac.question_1);
+        this.monitorPatient.question2 = this.getAnswer(vac.question_2);
+        this.monitorPatient.question3 = this.getAnswer(vac.question_3);
+        this.monitorPatient.question4 = this.getAnswer(vac.question_4);
+        this.monitorPatient.question5 = this.getAnswer(vac.question_5);
+        this.monitorPatient.question6 = this.getAnswer(vac.question_6);
+        this.monitorPatient.question7 = this.getAnswer(vac.question_7);
+        this.monitorPatient.question8 = this.getAnswer(vac.question_8);
+        // this.getAnswer9(vac.question_9);
+        this.monitorPatient.question10 = this.getAnswer(vac.question_10);
+        this.monitorPatient.question11 = this.getAnswer(vac.question_11);
+        this.monitorPatient.question12 = this.getAnswer(vac.question_12);
+        this.monitorPatient.question13 = this.getAnswer(vac.question_13);
+        this.monitorPatient.question14 = this.getAnswer(vac.question_14);
+        this.monitorPatient.question15 = this.getAnswer(vac.question_15);
+        this.monitorPatient.question16 = this.getAnswer(vac.question_16);
+        // this.getAnswer17(vac.question_17);
+        this.monitorPatient.question18 = this.getAnswer(vac.question_18);
+        this.monitorPatient.question19 = this.getAnswer(vac.question_19);
+      } else {
+        this.isDisabled = false;
+        this.monitorPatient.vaccinator = "";
+        this.monitorPatient.vaccinators = null;
+        this.monitorPatient.dosage = "3rd(Booster)";
+        this.monitorPatient.dose = (monitorPatient.booster.id + 2).toString();
+        this.monitorPatient.vaccine_categories = null;
+        this.monitorPatient.vaccine_manufacturer = "";
+        this.monitorPatient.lot_number = "";
+        this.monitorPatient.batch_number = "";
+        this.monitorPatient.consent = "";
+        this.monitorPatient.vaccination_date = null;
+        this.monitorPatient.reason_for_refusal = "";
+        this.monitorPatient.deferral = "";
+      }
+
+      console.log(this.monitorPatient.dose);
+    },
     clearInput() {
       this.monitorPatient.vaccine_categories = {};
       this.monitorPatient.vaccinators = {};
