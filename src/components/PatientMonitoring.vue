@@ -195,6 +195,7 @@
                         type="text"
                         :rules="[(v) => !!v || 'Lot Number is required']"
                         :disabled="isDisabled"
+                        @change="copyLotNumber"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="3">
@@ -204,6 +205,7 @@
                         type="text"
                         :rules="[(v) => !!v || 'Batch Number is required']"
                         :disabled="isDisabled"
+                        @change="copyBatchNumber"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="3">
@@ -3432,6 +3434,18 @@ export default {
         this.isCopyCode = false;
       }, 3000);
     },
+    copyLotNumber(){
+      console.log(this.monitorPatient.lot_number);
+      if(this.monitorPatient.batch_number == "" || this.monitorPatient.batch_number == null){
+        this.monitorPatient.batch_number = this.monitorPatient.lot_number;
+      }
+    },
+    copyBatchNumber(){
+      console.log(this.monitorPatient.batch_number);
+       if(this.monitorPatient.lot_number == "" || this.monitorPatient.lot_number == null){
+        this.monitorPatient.lot_number = this.monitorPatient.batch_number;
+      }
+    }
   },
   created() {
     this.getVaccinators();
