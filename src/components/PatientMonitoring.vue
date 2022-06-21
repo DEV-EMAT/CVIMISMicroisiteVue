@@ -2325,12 +2325,29 @@ export default {
     saveMonitorPatient() {
       console.log("save");
       if (this.validate()) {
+        if (
+          this.monitorPatient.batch_number == "NA" ||
+          this.monitorPatient.batch_number == "na" ||
+          this.monitorPatient.batch_number == "N/A" ||
+          this.monitorPatient.batch_number == "n/a"
+        ) {
+          this.monitorPatient.batch_number = this.monitorPatient.lot_number;
+        }
+        if (
+          this.monitorPatient.lot_number == "NA" ||
+          this.monitorPatient.lot_number == "na" ||
+          this.monitorPatient.lot_number == "N/A" ||
+          this.monitorPatient.lot_number == "n/a"
+        ) {
+          this.monitorPatient.lot_number = this.monitorPatient.batch_number;
+        }
         this.getAnswerQuestion8();
         this.getAnswerQuestion17();
         this.getAnswerSurvey();
         this.monitorPatient.vaccination_date = moment(
           this.monitorPatient.vaccination_date
         ).format("MM/DD/YYYY");
+        console.log(this.monitorPatient);
         let data = this.monitorPatient;
         this.$swal({
           title: "Confirm",
@@ -3434,18 +3451,24 @@ export default {
         this.isCopyCode = false;
       }, 3000);
     },
-    copyLotNumber(){
+    copyLotNumber() {
       console.log(this.monitorPatient.lot_number);
-      if(this.monitorPatient.batch_number == "" || this.monitorPatient.batch_number == null){
+      if (
+        this.monitorPatient.batch_number == "" ||
+        this.monitorPatient.batch_number == null
+      ) {
         this.monitorPatient.batch_number = this.monitorPatient.lot_number;
       }
     },
-    copyBatchNumber(){
+    copyBatchNumber() {
       console.log(this.monitorPatient.batch_number);
-       if(this.monitorPatient.lot_number == "" || this.monitorPatient.lot_number == null){
+      if (
+        this.monitorPatient.lot_number == "" ||
+        this.monitorPatient.lot_number == null
+      ) {
         this.monitorPatient.lot_number = this.monitorPatient.batch_number;
       }
-    }
+    },
   },
   created() {
     this.getVaccinators();
