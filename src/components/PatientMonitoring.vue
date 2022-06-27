@@ -1853,6 +1853,7 @@ export default {
       protein: 0,
     },
     dosages: ["1st", "2nd", "3rd(Booster)"],
+    boosters: [],
     vaccineManufacturers: [
       "ASTRAZENECA",
       "MODERNA",
@@ -1869,6 +1870,7 @@ export default {
       dose: "",
       vaccine_manufacturer: "",
       vaccine_categories: null,
+      booster: null,
       lot_number: "",
       batch_number: "",
       consent: "",
@@ -2216,6 +2218,7 @@ export default {
       ];
     },
     changeProcess() {
+      console.log(this.radioValue);
       if (this.radioValue == "1") {
         this.isDisabled = false;
         this.monitorPatientDialog = true;
@@ -2299,6 +2302,8 @@ export default {
           this.dosages.splice(1);
         }
       } else {
+        console.log("here");
+        console.log(this.monitorPatient.dosage);
         this.dosages = ["1st", "2nd", "3rd(Booster)"];
 
         for (var x = 1; x <= 3; x++) {
@@ -2314,6 +2319,8 @@ export default {
           };
           this.boosters.push(obj2);
         }
+
+        console.log(this.boosters);
 
         this.monitorPatient.booster = this.boosters[0];
       }
